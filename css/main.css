@@ -6036,6 +6036,11 @@ img {
 		margin-left: 15%;
 		width: 70%;
 	}
+	
+	a.logo img {
+		margin-top: -3px !important;
+		margin-left: 5px !important;
+	}
 }
 
 .s-overlay-diagonal-double {
@@ -14068,6 +14073,8 @@ a.logo {
 a.logo img {
 	display: inline-block;
 	max-height: 80px;
+	margin-top: -10px;
+    margin-left: 5px;
 }
 
 a.logo .logo-text {
@@ -22471,6 +22478,7 @@ section.top_white_line_big .container:before {
 	-webkit-transform: translate(-50%, -50%);
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
+	display: none;
 }
 
 .search-box i {
