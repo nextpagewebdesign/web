@@ -665,7 +665,7 @@ function documentReadyInit() {
 		})
 	}
 	if ($().localScroll) {
-		$('.top-nav > ul, .mainmenu_side_wrapper > ul, #land, .flexslider-bottom, .testimonials-btn, .comments-link').localScroll({
+		$('.top-nav > ul, .mainmenu_side_wrapper > ul, #land, .flexslider-bottom, .testimonials-btn, .comments-link, .btn-get-started').localScroll({
 			duration:900,
 			easing:'easeInOutQuart',
 			offset: -navHeight+40
