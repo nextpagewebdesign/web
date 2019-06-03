@@ -23107,3 +23107,7 @@ h5 {
 .checkbox-slider--b-flat input + span:before {
 	box-shadow: none;
 }
+
+.widget_social_buttons a[class*='fa-']:before{
+	font-size: 47px;
+}
