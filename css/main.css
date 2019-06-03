@@ -22335,6 +22335,7 @@ h4.margin {
 .process-part .right .step-text {
 	margin-left: 0;
 	margin-right: -30px;
+	text-align: left!important;
 }
 
 @media (max-width: 991px) {
