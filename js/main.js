@@ -1,137 +1,137 @@
 "use strict";
 //Wrapping all JavaScript code into a IIFE function for prevent global variables creation
-(function($){
+(function ($) {
 
-var $body = $('body');
-var $window = $(window);
+	var $body = $('body');
+	var $window = $(window);
 
-//hidding menu elements that do not fit in menu width
-//processing center logo
-function menuHideExtraElements() {
-	
-	//cleaneng changed elements
-	$('.sf-more-li, .sf-logo-li').remove();
-	var windowWidth = $('body').innerWidth();
-	
-	$('.sf-menu').each(function(){
-		var $thisMenu = $(this);
-		var $menuWraper = $thisMenu.closest('.top-nav');
-		$menuWraper.attr('style', '');
-		if (windowWidth > 1199) {
-			//grab all main menu first level items 
-			var $menuLis = $menuWraper.find('.sf-menu > li');
-			$menuLis.removeClass('sf-xl-hidden');
+	//hidding menu elements that do not fit in menu width
+	//processing center logo
+	function menuHideExtraElements() {
 
-			var $headerLogoCenter = $thisMenu.closest('.header_logo_center');
-			var logoWidth = 0;
-			var summaryLiWidth = 0;
-			
-			if ( $headerLogoCenter.length ) {
-				var $logo = $headerLogoCenter.find('.logo');
-				// 30/2 - left and right margins
-				logoWidth = $logo.outerWidth(true) + 70;
-			}
+		//cleaneng changed elements
+		$('.sf-more-li, .sf-logo-li').remove();
+		var windowWidth = $('body').innerWidth();
 
-			// var wrapperWidth = $('.sf-menu').width();
-			var wrapperWidth = $menuWraper.outerWidth(true);
-			$menuLis.each(function(index) {
-				//4 - 4px additional width for inline-block LI element
-				var elementWidth = $(this).outerWidth() +4;
-				summaryLiWidth += elementWidth;
-				if(summaryLiWidth >= (wrapperWidth-logoWidth)) {
-					var $newLi = $('<li class="sf-more-li"><a>...</a><ul></ul></li>');
-					$($menuLis[index - 1 ]).before($newLi);
-					var newLiWidth = $($newLi).outerWidth(true);
-					var $extraLiElements = $menuLis.filter(':gt('+ ( index - 2 ) +')');
-					$extraLiElements.clone().appendTo($newLi.find('ul'));
-					$extraLiElements.addClass('sf-xl-hidden');
-					return false;
+		$('.sf-menu').each(function () {
+			var $thisMenu = $(this);
+			var $menuWraper = $thisMenu.closest('.top-nav');
+			$menuWraper.attr('style', '');
+			if (windowWidth > 1199) {
+				//grab all main menu first level items 
+				var $menuLis = $menuWraper.find('.sf-menu > li');
+				$menuLis.removeClass('sf-xl-hidden');
+
+				var $headerLogoCenter = $thisMenu.closest('.header_logo_center');
+				var logoWidth = 0;
+				var summaryLiWidth = 0;
+
+				if ($headerLogoCenter.length) {
+					var $logo = $headerLogoCenter.find('.logo');
+					// 30/2 - left and right margins
+					logoWidth = $logo.outerWidth(true) + 70;
 				}
-			});
 
-			//processing center logo
-			if ( $headerLogoCenter.length ) {
-				var $menuLisVisible = $headerLogoCenter.find('.sf-menu > li:not(.sf-xl-hidden)');
-				var menuLength = $menuLisVisible.length;
-				var summaryLiVisibleWidth = 0;
-				$menuLisVisible.each(function(){
-					summaryLiVisibleWidth += $(this).outerWidth();
+				// var wrapperWidth = $('.sf-menu').width();
+				var wrapperWidth = $menuWraper.outerWidth(true);
+				$menuLis.each(function (index) {
+					//4 - 4px additional width for inline-block LI element
+					var elementWidth = $(this).outerWidth() + 4;
+					summaryLiWidth += elementWidth;
+					if (summaryLiWidth >= (wrapperWidth - logoWidth)) {
+						var $newLi = $('<li class="sf-more-li"><a>...</a><ul></ul></li>');
+						$($menuLis[index - 1]).before($newLi);
+						var newLiWidth = $($newLi).outerWidth(true);
+						var $extraLiElements = $menuLis.filter(':gt(' + (index - 2) + ')');
+						$extraLiElements.clone().appendTo($newLi.find('ul'));
+						$extraLiElements.addClass('sf-xl-hidden');
+						return false;
+					}
 				});
 
-				var centerLi = Math.floor( menuLength / 2 );
-				if ( (menuLength % 2 === 0) ) {
-					centerLi--;
+				//processing center logo
+				if ($headerLogoCenter.length) {
+					var $menuLisVisible = $headerLogoCenter.find('.sf-menu > li:not(.sf-xl-hidden)');
+					var menuLength = $menuLisVisible.length;
+					var summaryLiVisibleWidth = 0;
+					$menuLisVisible.each(function () {
+						summaryLiVisibleWidth += $(this).outerWidth();
+					});
+
+					var centerLi = Math.floor(menuLength / 2);
+					if ((menuLength % 2 === 0)) {
+						centerLi--;
+					}
+					var $liLeftFromLogo = $menuLisVisible.eq(centerLi);
+					$liLeftFromLogo.after('<li class="sf-logo-li"><a href="#">&nbsp;</a></li>');
+					$headerLogoCenter.find('.sf-logo-li').width(logoWidth);
+					var liLeftRightDotX = $liLeftFromLogo.offset().left + $liLeftFromLogo.outerWidth();
+					var logoLeftDotX = windowWidth / 2 - logoWidth / 2;
+					var menuLeftOffset = liLeftRightDotX - logoLeftDotX;
+					$menuWraper.css({ 'left': -menuLeftOffset })
 				}
-				var $liLeftFromLogo = $menuLisVisible.eq(centerLi);
-				$liLeftFromLogo.after('<li class="sf-logo-li"><a href="#">&nbsp;</a></li>');
-				$headerLogoCenter.find('.sf-logo-li').width(logoWidth);
-				var liLeftRightDotX = $liLeftFromLogo.offset().left + $liLeftFromLogo.outerWidth();
-				var logoLeftDotX = windowWidth/2 - logoWidth/2;
-				var menuLeftOffset = liLeftRightDotX - logoLeftDotX;
-				$menuWraper.css({'left': -menuLeftOffset})
-			}
-			
-		}// > 991
-	}); //sf-menu each
-} //menuHideExtraElements
 
-function initMegaMenu(timeOut) {
-	var $megaMenu = $('.top-nav .mega-menu');
-	if($megaMenu.length) {
-		setTimeout(function () {
+			}// > 991
+		}); //sf-menu each
+	} //menuHideExtraElements
 
-			var windowWidth = $('body').innerWidth();
-			if (windowWidth > 991) {
-				$megaMenu.each(function(){
-					var $thisMegaMenu = $(this);
-					//temporary showing mega menu to proper size calc
-					$thisMegaMenu.css({'display': 'block', 'left': 'auto'});
+	function initMegaMenu(timeOut) {
+		var $megaMenu = $('.top-nav .mega-menu');
+		if ($megaMenu.length) {
+			setTimeout(function () {
 
-					//checking for sticked side header
-					var stickedSideHeaderWidth = 0;
-					var $stickedSideHeader = $('.header_side_sticked');
-					if($stickedSideHeader.length && $stickedSideHeader.hasClass('active-slide-side-header')) {
-						stickedSideHeaderWidth = $stickedSideHeader.outerWidth(true);
-						if($stickedSideHeader.hasClass('header_side_right')) {
-							stickedSideHeaderWidth = -stickedSideHeaderWidth;
+				var windowWidth = $('body').innerWidth();
+				if (windowWidth > 991) {
+					$megaMenu.each(function () {
+						var $thisMegaMenu = $(this);
+						//temporary showing mega menu to proper size calc
+						$thisMegaMenu.css({ 'display': 'block', 'left': 'auto' });
+
+						//checking for sticked side header
+						var stickedSideHeaderWidth = 0;
+						var $stickedSideHeader = $('.header_side_sticked');
+						if ($stickedSideHeader.length && $stickedSideHeader.hasClass('active-slide-side-header')) {
+							stickedSideHeaderWidth = $stickedSideHeader.outerWidth(true);
+							if ($stickedSideHeader.hasClass('header_side_right')) {
+								stickedSideHeaderWidth = -stickedSideHeaderWidth;
+							}
+							windowWidth = windowWidth - stickedSideHeaderWidth;
 						}
-						windowWidth = windowWidth - stickedSideHeaderWidth;
-					}
-					var thisWidth = $thisMegaMenu.outerWidth();
-					var thisOffset = $thisMegaMenu.offset().left - stickedSideHeaderWidth;
-					var thisLeft = (thisOffset + (thisWidth/2)) - windowWidth/2;
-					$thisMegaMenu.css({'left' : -thisLeft, 'display': 'none'});
-					if(!$thisMegaMenu.closest('ul').hasClass('nav')) {
-						$thisMegaMenu.css('left', '');
-					}
-				});
-			}
-		}, timeOut);
+						var thisWidth = $thisMegaMenu.outerWidth();
+						var thisOffset = $thisMegaMenu.offset().left - stickedSideHeaderWidth;
+						var thisLeft = (thisOffset + (thisWidth / 2)) - windowWidth / 2;
+						$thisMegaMenu.css({ 'left': -thisLeft, 'display': 'none' });
+						if (!$thisMegaMenu.closest('ul').hasClass('nav')) {
+							$thisMegaMenu.css('left', '');
+						}
+					});
+				}
+			}, timeOut);
 
+		}
 	}
-}
 
-//NOTE: affixed sidebar works bad with side headers
-function initAffixSidebar() {
-	var $affixAside = $('.affix-aside');
-	if ($affixAside.length) {
+	//NOTE: affixed sidebar works bad with side headers
+	function initAffixSidebar() {
+		var $affixAside = $('.affix-aside');
+		if ($affixAside.length) {
 
 			$window = $(window);
-		
+
 			//on stick and unstick event
-			$affixAside.on('affix.bs.affix', function(e) {
+			$affixAside.on('affix.bs.affix', function (e) {
 				var affixWidth = $affixAside.width() - 1;
 				var affixLeft = $affixAside.offset().left;
 				$affixAside
 					.width(affixWidth)
 					.css("left", affixLeft);
 
-			}).on('affix-bottom.bs.affix', function(e) {
+			}).on('affix-bottom.bs.affix', function (e) {
 				var affixWidth = $affixAside.width() - 1;
 				//if sticked left header
 				var stickedSideHeaderWidth = 0;
 				var $stickedSideHeader = $('.header_side_sticked');
-				if($stickedSideHeader.length && $stickedSideHeader.hasClass('active-slide-side-header') && !$stickedSideHeader.hasClass('header_side_right')) {
+				if ($stickedSideHeader.length && $stickedSideHeader.hasClass('active-slide-side-header') && !$stickedSideHeader.hasClass('header_side_right')) {
 					stickedSideHeaderWidth = $stickedSideHeader.outerWidth(true);
 				}
 				var affixLeft = $affixAside.offset().left - stickedSideHeaderWidth - $('#box_wrapper').offset().left;;
@@ -139,8 +139,8 @@ function initAffixSidebar() {
 				$affixAside
 					.width(affixWidth)
 					.css("left", affixLeft);
-			}).on('affix-top.bs.affix', function(e) {
-				$affixAside.css({"width": "", "left": ""});
+			}).on('affix-top.bs.affix', function (e) {
+				$affixAside.css({ "width": "", "left": "" });
 			});
 
 			//counting offset
@@ -157,7 +157,7 @@ function initAffixSidebar() {
 				},
 			});
 
-			$window.on('resize', function() {
+			$window.on('resize', function () {
 				//returning sidebar in top position if it is sticked because of unexpected behavior
 				$affixAside.removeClass("affix affix-bottom").addClass("affix-top").trigger('affix-top.bs.affix');
 
@@ -176,1240 +176,1240 @@ function initAffixSidebar() {
 				});
 				//note that page_footer and page_copyright sections must exists - else this will cause error in last jQuery versions
 				var offsetBottom = $('.page_footer').outerHeight(true)
-								+ $('.page_copyright').outerHeight(true);
+					+ $('.page_copyright').outerHeight(true);
 
 				$affixAside.data('bs.affix').options.offset.top = offsetTop - offsetTopAdd;
 				$affixAside.data('bs.affix').options.offset.bottom = offsetBottom + offsetBottomAdd;
-				
+
 				$affixAside.affix('checkPosition');
 
 			});
 
 			$affixAside.affix('checkPosition');
 
-	}//eof checking of affix sidebar existing
-}
+		}//eof checking of affix sidebar existing
+	}
 
-//photoSwipe gallery plugin
-function initPhotoSwipe() {
-	if(typeof PhotoSwipe !== 'undefined') {
+	//photoSwipe gallery plugin
+	function initPhotoSwipe() {
+		if (typeof PhotoSwipe !== 'undefined') {
 
-		//adding prettyPhoto for backward compatibility. Deprecated.
-		//will leave only .photoswipe-link later
-		var gallerySelectors = '.photoswipe-link, a[data-gal^="prettyPhoto"], [data-thumb] a';
-		var $galleryLinks = $(gallerySelectors);
-		if ($galleryLinks.length) {
-
-			//adding photoswipe gallery markup
-			if (!($('.pswp').length)) {
-				$body.append('<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><a class="pswp__button pswp__button--close" title="Close (Esc)"></a><a class="pswp__button pswp__button--share" title="Share"></a><a class="pswp__button pswp__button--fs" title="Toggle fullscreen"></a><a class="pswp__button pswp__button--zoom" title="Zoom in/out"></a><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><a class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></a><a class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></a><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>');
-			//if function already was called - return (all listeners was setted and .pswp gallery container was added)
-			} else {
-				return;
-			}
 			//adding prettyPhoto for backward compatibility. Deprecated.
-			$('body').on('click', gallerySelectors, function (e) {
-				e.preventDefault();
+			//will leave only .photoswipe-link later
+			var gallerySelectors = '.photoswipe-link, a[data-gal^="prettyPhoto"], [data-thumb] a';
+			var $galleryLinks = $(gallerySelectors);
+			if ($galleryLinks.length) {
 
-				var $link = $(this);
-				var $linksParentContainer = $link.closest('.photoswipe-container, .isotope-wrapper, .owl-carousel, .flickr_ul, .images');
-				var $links = $linksParentContainer.find(gallerySelectors);
-				//for cloned owl-carousel items - continue to prevent duplicating - moved to EACH loop
-				//start index does not work with owl-carousel loop enabled
-				// if ($linksParentContainer.is('.owl-carousel')) {
-				// 	$links = $links.filter(function (index) {
-				// 		return !($(this).closest('.cloned').length);
-				// 	});
-				// }
-				//if no container only adding this link
-				if(!$links.length) {
-					$links.push($link);
-				}
-				var items = [];
-				var options = {
-					bgOpacity       : 0.7,
-					showHideOpacity : true,
-					history: false,
-					shareEl: false,
-					//data index is set in owl carousel init
-					index: $link.data('index') ? $link.data('index') : 0
-				};
-				var gallery = $('.pswp')[0];
-				//building items array
-				$links.each(function (i) {
-					var $this = $(this);
-					//if cloned element (owl or flexslider thumbs) - continue
-					if ($this.closest('.clone, .cloned').length) {
-						return;
-					}
-					//TODO think about hide items that are not showing after filtering and renew indexes for them
-					// if ($linksParentContainer.hasClass('isotope-wrapper') && !$this.is(':visible')) {
-					// 	return;
-					// }
-					var item = {};
-					//if not owl carousel
-					if (($link[0] === $this[0]) && !($link.data('index'))) {
-						//start from 0
-						if($linksParentContainer.hasClass('owl-carousel') || $linksParentContainer.hasClass('images')) {
-							options.index = i-1;
-						} else {
-							options.index = i;
-						}
-					}
-					//video or image
-					if ($this.data('iframe')) {
-						//for wordpress - iframe tag is escaped
-						//item.html = $this.data('iframe').replace(/&amp/g, '&').replace(/$lt;/g, '<').replace(/&gt;/g, '>').replace(/$quot;/g, '"');
-						//for html - building iframe manually
-						//autoplay only if 1 iframe in gallery
-						var autoplay = ( $links.length > 1 ) ? '' : '&autoplay=1';
-						item.html = '<div class="embed-responsive embed-responsive-16by9">';
-						// item.html += '<iframe class="embed-responsive-item" src="'+ $(this).data('iframe') + '?rel=0&autoplay=1'+ '"></iframe>';
-						item.html += '<iframe class="embed-responsive-item" src="' + $(this).data('iframe') + '?rel=0' + autoplay + '&enablejsapi=1&api=1"></iframe>';
-						item.html += '</div>';
-					} else {
-						item.src = $this.attr('href');
-						//default values
-						var width = 1170;
-						var height = 780;
-						//template data on A element
-						var data = $this.data();
-						//image data in Woo
-						var dataImage = $this.find('img').first().data();
-						if (data.width) {
-							width = data.width;
-						}
-						if (data.height) {
-							height = data.height;
-						}
-						if(typeof  dataImage !== 'undefined') {
-							if (dataImage.large_image_width) {
-								width = dataImage.large_image_width;
-							}
-							if (dataImage.large_image_height) {
-								height = dataImage.large_image_height;
-							}
-						}
-						item.w = width;
-						item.h = height;
-					}
-					items.push(item);
-				});
-
-				var pswpGallery = new PhotoSwipe(gallery, PhotoSwipeUI_Default, items, options);
-				pswpGallery.init();
-
-				//pausing video on close and on slide change
-				pswpGallery.listen('afterChange', function() {
-					$(pswpGallery.container).find('iframe').each(function() {
-						//"method":"pause" - form Vimeo, other - for YouTube
-						$(this)[0].contentWindow.postMessage('{"method":"pause","event":"command","func":"pauseVideo","args":""}', '*')
-					});
-				});
-				pswpGallery.listen('close', function() {
-					$(pswpGallery.container).find('iframe').each(function() {
-						//"method":"pause" - form Vimeo, other - for YouTube
-						$(this)[0].contentWindow.postMessage('{"method":"pause","event":"command","func":"pauseVideo","args":""}', '*')
-					});
-				});
-
-			});
-		}
-
-	}
-}
-
-//helper functions to init elements only when they appears in viewport (jQUery.appear plugin)
-function initAnimateElement(self, index) {
-	var animationClass = !self.data('animation') ? 'fadeInUp' : self.data('animation');
-	var animationDelay = !self.data('delay') ? 150 : self.data('delay');
-	setTimeout(function(){
-		self.addClass("animated " + animationClass);
-	}, index * animationDelay);
-}
-function initCounter(self) {
-	if (self.hasClass('counted')) {
-		return;
-	} else {
-		self.countTo().addClass('counted');
-	}
-}
-function initProgressbar(el) {
-	el.progressbar({
-		transition_delay: 300
-	});
-}
-function initChart(el) {
-	var data = el.data();
-	var size = data.size ? data.size : 270;
-	var line = data.line ? data.line : 20;
-	var bgcolor = data.bgcolor ? data.bgcolor : '#ffffff';
-	var trackcolor = data.trackcolor ? data.trackcolor : '#c14240';
-	var speed = data.speed ? data.speed : 3000;
-
-	el.easyPieChart({
-		barColor: trackcolor,
-		trackColor: bgcolor,
-		scaleColor: false,
-		scaleLength: false,
-		lineCap: 'butt',
-		lineWidth: line,
-		size: size,
-		rotate: 0,
-		animate: speed,
-		onStep: function(from, to, percent) {
-			$(this.el).find('.percent').text(Math.round(percent));
-		}
-	});
-}
-
-function initGoogleMap() {
-	//Google Map script
-	var $googleMaps = $('#map, .page_map');
-	if ( $googleMaps.length ) {
-		$googleMaps.each(function() {
-			var $map = $(this);
-
-			var lat;
-			var lng;
-			var map;
-
-			//map styles. You can grab different styles on https://snazzymaps.com/
-
-			//dark style
-			//var styles = [{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#c4c4c4"}]},{"featureType":"administrative.neighborhood","elementType":"labels.text.fill","stylers":[{"color":"#707070"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21},{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#be2026"},{"lightness":"0"},{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.text.stroke","stylers":[{"visibility":"off"},{"hue":"#ff000a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#575757"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#999999"}]},{"featureType":"road.local","elementType":"labels.text.stroke","stylers":[{"saturation":"-52"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}];
-
-			// light style
-			var styles = [{"featureType": "water","elementType": "geometry","stylers": [{"color": "#e9e9e9"},{"lightness": 17}]},{"featureType": "landscape","elementType": "geometry","stylers": [{"color": "#f5f5f5"},{"lightness": 20}]},{"featureType": "road.highway","elementType": "geometry.fill","stylers": [{"color": "#ffffff"},{"lightness": 17}]},{"featureType": "road.highway","elementType": "geometry.stroke","stylers": [{"color": "#ffffff"},{"lightness": 29},{"weight": 0.2}]},{"featureType": "road.arterial","elementType": "geometry","stylers": [{"color": "#ffffff"},{"lightness": 18}]},{"featureType": "road.local","elementType": "geometry","stylers": [{"color": "#ffffff"},{"lightness": 16}]},{"featureType": "poi","elementType": "geometry","stylers": [{"color": "#f5f5f5"},{"lightness": 21}]},{"featureType": "poi.park","elementType": "geometry","stylers": [{"color": "#dedede"},{"lightness": 21}]},{"elementType": "labels.text.stroke","stylers": [{"visibility": "on"},{"color": "#ffffff"},{"lightness": 16}]},{"elementType": "labels.text.fill","stylers": [{"saturation": 36},{"color": "#333333"},{"lightness": 40}]},{"elementType": "labels.icon","stylers": [{"visibility": "off"}]},{"featureType": "transit","elementType": "geometry","stylers": [{"color": "#f2f2f2"},{"lightness": 19}]},{"featureType": "administrative","elementType": "geometry.fill","stylers": [{"color": "#fefefe"},{"lightness": 20}]},{"featureType": "administrative","elementType": "geometry.stroke","stylers": [{"color": "#fefefe"},{"lightness": 17},{"weight": 1.2}]}];
-
-			//markers
-			var $markers = $map.find('.marker');
-
-			//map settings
-			var address = $markers.first().find('.marker-address').text() ? $markers.first().find('.marker-address').text() : 'london, baker street, 221b';
-			var geocoder = new google.maps.Geocoder();
-
-
-			var draggable = $map.data('draggable') ? $map.data('draggable') : false;
-			var scrollwheel = $map.data('scrollwheel') ? $map.data('scrollwheel') : false;
-
-			//type your address after "address="
-			geocoder.geocode({
-				address: address
-			}, function(data){
-
-				lat = data[0].geometry.location.lat();
-				lng = data[0].geometry.location.lng();
-
-				var center = new google.maps.LatLng(lat, lng);
-				var settings = {
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					zoom: 16,
-					draggable: draggable,
-					scrollwheel: scrollwheel,
-					center: center,
-					styles: styles
-				};
-				map = new google.maps.Map($map[0], settings);
-
-				var infoWindows = [];
-
-				$($markers).each(function(index) {
-
-					var $marker = $(this);
-					var markerTitle = $marker.find('.marker-title').text();
-
-					//building info widnow HTML code
-					var markerDescription = '';
-					markerDescription += markerTitle ? '<h3 class="makret-title">' + markerTitle + '</h3>' : '';
-					markerDescription += $marker.find('.marker-description').html() ? '<div class="marker-description">' + $marker.find('.marker-description').html() + '</div>' : '';
-					if(markerDescription) {
-						markerDescription = '<div class="map_marker_description">' + markerDescription + '</div>';
-					}
-
-					geocoder.geocode({
-						address: $marker.find('.marker-address').text()
-					}, function(data){
-						var iconSrc = $marker.find('.marker-icon').attr('src');
-
-						var lat = data[0].geometry.location.lat();
-						var lng = data[0].geometry.location.lng();
-
-						var center = new google.maps.LatLng(lat, lng);
-
-						var marker = new google.maps.Marker({
-							position: center,
-							title: markerTitle,
-							map: map,
-							icon: iconSrc
-						});
-
-						var infowindow = new google.maps.InfoWindow({
-							content: markerDescription
-						});
-
-						infoWindows.push(infowindow);
-
-						google.maps.event.addListener(marker, 'click', function() {
-							for (var i=0;i<infoWindows.length;i++) {
-								infoWindows[i].close();
-							}
-							infowindow.open(map,marker);
-						});
-					});
-				});
-			});
-		}); //each Google map
-	}//google map length
-}
-
-//function that initiating template plugins on window.load event
-function documentReadyInit() {
-	////////////
-	//mainmenu//
-	////////////
-	if ($().scrollbar) {
-		$('[class*="scrollbar-"]').scrollbar();
-	}
-	if ($().superfish) {
-		$('ul.sf-menu').superfish({
-			popUpSelector: 'ul:not(.mega-menu ul), .mega-menu ',
-			delay:       700,
-			animation:   {opacity:'show', marginTop: 0},
-			animationOut: {opacity: 'hide',  marginTop: 5},
-			speed:       200,
-			speedOut:    200,
-			disableHI:   false,
-			cssArrows:   true,
-			autoArrows:  true,
-			onInit: function () {
-				var $thisMenu = $(this);
-				$thisMenu.find('.sf-with-ul').after('<span class="sf-menu-item-mobile-toggler"/>');
-				$thisMenu.find('.sf-menu-item-mobile-toggler').on('click', function (e) {
-					var $parentLi = $(this).parent();
-					if($parentLi.hasClass('sfHover')) {
-						$parentLi.superfish('hide');
-					} else {
-						$parentLi.superfish('show');
-					}
-				});
-			}
-
-		});
-		$('ul.sf-menu-side').superfish({
-			popUpSelector: 'ul:not(.mega-menu ul), .mega-menu ',
-			delay:       500,
-			animation:   {opacity:'show', height: 100 +'%'},
-			animationOut: {opacity: 'hide',  height: 0},
-			speed:       400,
-			speedOut:    300,
-			disableHI:   false,
-			cssArrows:   true,
-			autoArrows:  true
-		});
-	}
-
-
-	//toggle mobile menu
-	$('.page_header .toggle_menu, .page_toplogo .toggle_menu').on('click', function(){
-		$(this)
-			.toggleClass('mobile-active')
-			.closest('.page_header')
-			.toggleClass('mobile-active')
-			.end()
-			.closest('.page_toplogo')
-			.next()
-			.find('.page_header')
-			.toggleClass('mobile-active');
-	});
-
-	$('.sf-menu a').on('click', function(){
-		var $this = $(this);
-		//If this is a local link or item with sumbenu - not toggling menu
-		if (($this.hasClass('sf-with-ul')) || !($this.attr('href').charAt(0) === '#')) {
-			return;
-		}
-		$this
-			.closest('.page_header')
-			.toggleClass('mobile-active')
-			.find('.toggle_menu')
-			.toggleClass('mobile-active');
-	});
-
-	//side header processing
-	var $sideHeader = $('.page_header_side');
-	// toggle sub-menus visibility on menu-click
-	$('ul.menu-click').find('li').each(function(){
-		var $thisLi = $(this);
-		//toggle submenu only for menu items with submenu
-		if ($thisLi.find('ul').length)  {
-			$thisLi
-				.append('<span class="toggle_submenu color-darkgrey"></span>')
-				//adding anchor
-				.find('.toggle_submenu, > a')
-				.on('click', function(e) {
-					var $thisSpanOrA = $(this);
-					//if this is a link and it is already opened - going to link
-					if (($thisSpanOrA.attr('href') === '#') || !($thisSpanOrA.parent().hasClass('active-submenu'))) {
-						e.preventDefault();
-					}
-					if ($thisSpanOrA.parent().hasClass('active-submenu')) {
-						$thisSpanOrA.parent().removeClass('active-submenu');
-						return;
-					}
-					$thisLi.addClass('active-submenu').siblings().removeClass('active-submenu');
-				});
-		} //eof sumbenu check
-	});
-	if ($sideHeader.length) {
-		$('.toggle_menu_side').on('click', function(){
-			var $thisToggler = $(this);
-			$thisToggler.toggleClass('active');
-			if ($thisToggler.hasClass('header-slide')) {
-				$sideHeader.toggleClass('active-slide-side-header');
-			} else {
-				if($thisToggler.parent().hasClass('header_side_right')) {
-					$body.toggleClass('active-side-header slide-right');
+				//adding photoswipe gallery markup
+				if (!($('.pswp').length)) {
+					$body.append('<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"><div class="pswp__bg"></div><div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><a class="pswp__button pswp__button--close" title="Close (Esc)"></a><a class="pswp__button pswp__button--share" title="Share"></a><a class="pswp__button pswp__button--fs" title="Toggle fullscreen"></a><a class="pswp__button pswp__button--zoom" title="Zoom in/out"></a><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div> </div><a class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></a><a class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></a><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>');
+					//if function already was called - return (all listeners was setted and .pswp gallery container was added)
 				} else {
-					$body.toggleClass('active-side-header');
+					return;
 				}
-				$body.parent().toggleClass('html-active-push-header');
-			}
-			//fixing mega menu and aside affix on toggling side sticked header
-			if($thisToggler.closest('.header_side_sticked').length) {
-				initMegaMenu(600);
-				var $affixAside = $('.affix-aside');
-				if($affixAside.length) {
-					$affixAside.removeClass("affix affix-bottom").addClass("affix-top").css({"width": "", "left": ""}).trigger('affix-top.bs.affix');
-					setTimeout(function () {
-						$affixAside.removeClass("affix affix-bottom").addClass("affix-top").css({"width": "", "left": ""}).trigger('affix-top.bs.affix');
-					}, 10);
-				}
-			}
-		});
-		//hidding side header on click outside header
-		$body.on('mousedown touchstart', function( e ) {
-			if ( !($(e.target).closest('.page_header_side').length) && !($sideHeader.hasClass('header_side_sticked')) ) {
-				$sideHeader.removeClass('active-slide-side-header');
-				$body.removeClass('active-side-header slide-right');
-                $body.parent().removeClass('html-active-push-header');
-				var $toggler = $('.toggle_menu_side');
-				if(($toggler).hasClass('active')) {
-					$toggler.removeClass('active');
-				}
-			}
-		});
-	} //sideHeader check
-
-	//1 and 2/3/4th level offscreen fix
-	var MainWindowWidth = $window.width();
-	$window.on('resize', function(){
-		MainWindowWidth = $(window).width();
-	});
-	//2/3/4 levels
-	$('.top-nav .sf-menu').on('mouseover', 'ul li', function(){
-		// $('.mainmenu').on('mouseover', 'ul li', function(){
-		if(MainWindowWidth > 991) {
-			var $this = $(this);
-			// checks if third level menu exist
-			var subMenuExist = $this.find('ul').length;
-			if( subMenuExist > 0){
-				var subMenuWidth = $this.find('ul, div').first().width();
-				var subMenuOffset = $this.find('ul, div').first().parent().offset().left + subMenuWidth;
-				// if sub menu is off screen, give new position
-				if((subMenuOffset + subMenuWidth) > MainWindowWidth){
-					var newSubMenuPosition = subMenuWidth + 0;
-					$this.find('ul, div').first().css({
-						left: -newSubMenuPosition,
-					});
-				} else {
-					$this.find('ul, div').first().css({
-						left: '100%',
-					});
-				}
-			}
-		}
-		//1st level
-	}).on('mouseover', '> li', function(){
-		if(MainWindowWidth > 991) {
-			var $this = $(this);
-			var subMenuExist = $this.find('ul').length;
-			if( subMenuExist > 0){
-				var subMenuWidth = $this.find('ul').width();
-				var subMenuOffset = $this.find('ul').parent().offset().left;
-				// if sub menu is off screen, give new position
-				if((subMenuOffset + subMenuWidth) > MainWindowWidth){
-					var newSubMenuPosition = MainWindowWidth - (subMenuOffset + subMenuWidth);
-					$this.find('ul').first().css({
-						left: newSubMenuPosition,
-					});
-				}
-			}
-		}
-	});
-
-	/////////////////////////////////////////
-	//single page localscroll and scrollspy//
-	/////////////////////////////////////////
-	var navHeight = $('.page_header').outerHeight(true);
-	//if sidebar nav exists - binding to it. Else - to main horizontal nav
-	if ($('.mainmenu_side_wrapper').length) {
-		$body.scrollspy({
-			target: '.mainmenu_side_wrapper',
-			offset: navHeight
-		});
-	} else if ($('.top-nav').length) {
-		$body.scrollspy({
-			target: '.top-nav',
-			offset: navHeight
-		})
-	}
-	if ($().localScroll) {
-		$('.top-nav > ul, .mainmenu_side_wrapper > ul, #land, .flexslider-bottom, .testimonials-btn, .comments-link, .btn-get-started').localScroll({
-			duration:900,
-			easing:'easeInOutQuart',
-			offset: -navHeight+40
-		});
-	}
-
-	//background image teaser and sections with half image bg
-	//put this before prettyPhoto init because image may be wrapped in prettyPhoto link
-	$(".bg_teaser, .cover-image").each(function(){
-		var $element = $(this);
-		var $image = $element.find("img").first();
-		if (!$image.length) {
-			$image = $element.parent().find("img").first();
-		}
-		if (!$image.length) {
-			return;
-		}
-		var imagePath = $image.attr("src");
-		$element.css("background-image", "url(" + imagePath + ")");
-		var $imageParent = $image.parent();
-		//if image inside link - adding this link, removing gallery to preserve duplicating gallery items
-		if ($imageParent.is('a')) {
-			$element.prepend($image.parent().clone().html(''));
-			$imageParent.attr('data-gal', '');
-		}
-	});
-
-	//video images preview - from WP
-	$('.embed-placeholder').each(function(){
-		$(this).on('click', function(e) {
-			var $thisLink = $(this);
-			// if prettyPhoto popup with YouTube - return
-			if ($thisLink.attr('data-gal')) {
-				return;
-			}
-			e.preventDefault();
-			if ($thisLink.attr('href') === '' || $thisLink.attr('href') === '#') {
-				$thisLink.replaceWith($thisLink.data('iframe').replace(/&amp/g, '&').replace(/$lt;/g, '<').replace(/&gt;/g, '>').replace(/$quot;/g, '"')).trigger('click');
-			} else {
-				$thisLink.replaceWith('<iframe class="embed-responsive-item" src="'+ $thisLink.attr('href') + '?rel=0&autoplay=1'+ '"></iframe>');
-			}
-		});
-	});
-
-	//toTop
-	if ($().UItoTop) {
-		$().UItoTop({ easingType: 'easeInOutQuart' });
-	}
-
-	//parallax
-	if ($().parallax) {
-		$('.s-parallax').parallax("50%", 0.01);
-	}
-
-	//prettyPhoto
-	if ($().prettyPhoto) {
-		$("a[data-gal^='prettyPhoto']").prettyPhoto({
-			hook: 'data-gal',
-			theme: 'facebook' /* light_rounded / dark_rounded / light_square / dark_square / facebook / pp_default*/
-		});
-	}
-	initPhotoSwipe();
-
-	////////////////////////////////////////
-	//init Bootstrap JS components//
-	////////////////////////////////////////
-	//adding .form-control class for search widgets
-	$('[type="search"]').addClass('form-control');
-
-
-	//bootstrap carousel
-	if ($().carousel) {
-		$('.carousel').carousel();
-	}
-	//bootstrap tab - show first tab
-	$('.nav-tabs').each(function() {
-		$(this).find('a').first().tab('show');
-	});
-	//video in bootstrap tabs
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		var iframe = $(e.relatedTarget.hash).find('iframe');
-		var src = iframe.attr('src');
-		iframe.attr('src', '');
-		iframe.attr('src', src);
-	});
-
-	$('.tab-content').each(function() {
-		$(this).find('.tab-pane').first().addClass('fade in');
-	});
-	//bootstrap collapse - show first tab
-	$('.panel-group').each(function() {
-		$(this).find('a').first().filter('.collapsed').trigger('click');
-	});
-	//tooltip
-	if ($().tooltip) {
-		$('[data-toggle="tooltip"]').tooltip();
-	}
-
-	//comingsoon counter
-	if ($().countdown) {
-		var $counter = $('#comingsoon-countdown');
-		//today date plus month for demo purpose
-		var date = ($counter.data('date') !== 'undefined') ? $counter.data('date') : false;
-		if(date) {
-			date = new Date(date);
-		} else {
-			date = new Date();
-			date.setMonth(date.getMonth()+1);
-		}
-		$counter.countdown({until: date});
-	}
-
-	/////////////////////////////////////////////////
-	//PHP widgets - contact form, search, MailChimp//
-	/////////////////////////////////////////////////
-
-	//contact form processing
-	$('form.contact-form').on('submit', function( e ){
-		e.preventDefault();
-		var $form = $(this);
-		$($form).find('.contact-form-respond').remove();
-
-		//checking on empty values
-		$($form).find('[aria-required="true"], [required]').each(function(index) {
-			var $thisRequired = $(this);
-			if (!$thisRequired.val().length) {
-				$thisRequired
-					.addClass('invalid')
-					.on('focus', function(){
-						$thisRequired
-							.removeClass('invalid');
-					});
-			}
-		});
-		//if one of form fields is empty - exit
-		if ($form.find('[aria-required="true"], [required]').hasClass('invalid')) {
-			return;
-		}
-
-		//sending form data to PHP server if fields are not empty
-		var request = $form.serialize();
-		var ajax = jQuery.post( "contact-form.php", request )
-			.done(function( data ) {
-				$($form).find('[type="submit"]').attr('disabled', false).parent().append('<div class="contact-form-respond color-main mt-20">'+data+'</div>');
-				//cleaning form
-				var $formErrors = $form.find('.form-errors');
-				if ( !$formErrors.length ) {
-					$form[0].reset();
-				}
-			})
-			.fail(function( data ) {
-				$($form).find('[type="submit"]').attr('disabled', false).blur().parent().append('<div class="contact-form-respond color-main mt-20">Mail cannot be sent. You need PHP server to send mail.</div>');
-			})
-	});
-
-
-	//search modal
-	$(".search_modal_button").on('click', function(e){
-		e.preventDefault();
-		$('#search_modal').modal('show').find('input').first().focus();
-	});
-	//search form processing - not need in WP
-	$('form.searchform, form.search-form').on('submit', function( e ){
-
-		e.preventDefault();
-		var $form = $(this);
-		var $searchModal = $('#search_modal');
-		$searchModal.find('div.searchform-respond').remove();
-
-		//checking on empty values
-		$($form).find('[type="text"], [type="search"]').each(function(index) {
-			var $thisField = $(this);
-			if (!$thisField.val().length) {
-				$thisField
-					.addClass('invalid')
-					.on('focus', function(){
-						$thisField.removeClass('invalid')
-					});
-			}
-		});
-		//if one of form fields is empty - exit
-		if ($form.find('[type="text"]').hasClass('invalid')) {
-			return;
-		}
-
-		$searchModal.modal('show');
-		//sending form data to PHP server if fields are not empty
-		var request = $form.serialize();
-		var ajax = jQuery.post( "search.php", request )
-			.done(function( data ) {
-				$searchModal.append('<div class="searchform-respond">'+data+'</div>');
-			})
-			.fail(function( data ) {
-				$searchModal.append('<div class="searchform-respond">Search cannot be done. You need PHP server to search.</div>');
-
-			})
-	});
-
-	//MailChimp subscribe form processing
-	$('.signup').on('submit', function( e ) {
-		e.preventDefault();
-		var $form = $(this);
-		// update user interface
-		$form.find('.response').html('Adding email address...');
-		// Prepare query string and send AJAX request
-		jQuery.ajax({
-			url: 'mailchimp/store-address.php',
-			data: 'ajax=true&email=' + escape($form.find('.mailchimp_email').val()),
-			success: function(msg) {
-				$form.find('.response').html(msg);
-			}
-		});
-	});
-
-	//twitter
-	if ($().tweet) {
-		$('.twitter').tweet({
-			modpath: "./twitter/",
-			count: 2,
-			avatar_size: 48,
-			loading_text: 'loading twitter feed...',
-			join_text: 'auto',
-			username: 'michaeljackson',
-			template: "{avatar}<div class=\"tweet_right\">{join}<span class=\"tweet_text links-maincolor\">{tweet_text}</span>{time}</div>"
-		});
-	}
-
-	// init timetable
-	var $timetable = $('#timetable');
-	if ($timetable.length) {
-		// bind filter click
-		$('#timetable_filter').on( 'click', 'a', function( e ) {
-			e.preventDefault();
-			e.stopPropagation();
-			var $thisA = $(this);
-			if ( $thisA.hasClass('selected') ) {
-				// return false;
-				return;
-			}
-			var selector = $thisA.attr('data-filter');
-			$timetable
-				.find('tbody td')
-				.removeClass('current')
-				.end()
-				.find(selector)
-				.closest('td')
-				.addClass('current');
-			$thisA.closest('ul').find('a').removeClass('selected');
-			$thisA.addClass('selected');
-		});
-	}
-
-}
-
-//function that initiating template plugins on window.load event
-function windowLoadInit() {
-	//////////////
-	//flexslider//
-	//////////////
-	if ($().flexslider) {
-		//Team Slider Shortcode
-		jQuery('.flexslider.team-slider').flexslider({
-			slideshow: false,
-            directionNav: false,
-			manualControls: ".flex-control-nav-1 li",
-		});
-		
-		var $introSlider = $(".page_slider .flexslider");
-		$introSlider.each(function(index){
-			var $currentSlider = $(this);
-			var data = $currentSlider.data();
-			var nav = (data.nav !== 'undefined') ? data.nav : true;
-			var dots = (data.dots !== 'undefined') ? data.dots : true;
-			var speed = (data.speed !== 'undefined') ? data.speed : 7000;
-
-			$currentSlider.flexslider({
-				animation: "fade",
-				pauseOnHover: true, 
-				useCSS: true,
-				controlNav: dots,   
-				directionNav: nav,
-				prevText: "",
-				nextText: "",
-				smoothHeight: false,
-				slideshowSpeed:speed,
-				animationSpeed:600,
-				start: function( slider ) {
-					slider.find('.intro_layers').children().css({'visibility': 'hidden'});
-					slider.find('.flex-active-slide .intro_layers').children().each(function(index){
-						var self = $(this);
-						var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
-						setTimeout(function(){
-							self.addClass("animated "+animationClass);
-						}, index*500);
-					});
-				},
-				after :function( slider ){
-					slider.find('.flex-active-slide .intro_layers').children().each(function(index){
-						var self = $(this);
-						var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
-						setTimeout(function(){
-							self.addClass("animated "+animationClass);
-						}, index*500);
-					});
-				},
-				end :function( slider ){
-					slider.find('.intro_layers').children().each(function() {
-						var self = $(this);
-						var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
-						self.removeClass('animated ' + animationClass).css({'visibility': 'hidden'});
-							// $(this).attr('class', '');
-					});
-				},
-
-			})
-			//wrapping nav with container - uncomment if need
-			// .find('.flex-control-nav')
-			// .wrap('<div class="container nav-container"/>')
-		}); //.page_slider flex slider
-
-		$(".flexslider").each(function(index){
-			var $currentSlider = $(this);
-			//exit if intro slider already activated 
-			if ($currentSlider.find('.flex-active-slide').length) {
-				return;
-			}
-			$currentSlider.flexslider({
-				animation: "fade",
-				useCSS: true,
-				controlNav: true,   
-				directionNav: false,
-				prevText: "",
-				nextText: "",
-				smoothHeight: false,
-				slideshowSpeed:5000,
-				animationSpeed:800,
-			})
-		});
-	}
-
-	////////////////
-	//owl carousel//
-	////////////////
-	if ($().owlCarousel) {
-		$('.owl-carousel').each(function() {
-			var $carousel = $(this);
-			$carousel.find('> *').each(function (i) {
-				$(this).attr('data-index', i);
-			});
-			var data = $carousel.data();
-
-			var loop = data.loop ? data.loop : false,
-				margin = (data.margin || data.margin === 0) ? data.margin : 30,
-				nav = data.nav ? data.nav : false,
-				navPrev = data.navPrev ? data.navPrev : '<i class="fa fa-angle-left">',
-				navNext = data.navNext ? data.navNext : '<i class="fa fa-angle-right">',
-				dots = data.dots ? data.dots : false,
-				themeClass = data.themeclass ? data.themeclass : 'owl-theme',
-				center = data.center ? data.center : false,
-				items = data.items ? data.items : 4,
-				autoplay = data.autoplay ? data.autoplay : false,
-				responsiveXs = data.responsiveXs ? data.responsiveXs : 1,
-				responsiveSm = data.responsiveSm ? data.responsiveSm : 2,
-				responsiveMd = data.responsiveMd ? data.responsiveMd : 3,
-				responsiveLg = data.responsiveLg ? data.responsiveLg : 4,
-				draggable = (data.draggable === false) ? data.draggable : true,
-				syncedClass = (data.syncedClass) ? data.syncedClass : false,
-				filters = data.filters ? data.filters : false;
-
-			if (filters) {
-				$carousel.after($carousel.clone().addClass('owl-carousel-filter-cloned'));
-				$(filters).on('click', 'a', function( e ) {
-					//processing filter link
+				//adding prettyPhoto for backward compatibility. Deprecated.
+				$('body').on('click', gallerySelectors, function (e) {
 					e.preventDefault();
-					if ($(this).hasClass('selected')) {
-						return;
+
+					var $link = $(this);
+					var $linksParentContainer = $link.closest('.photoswipe-container, .isotope-wrapper, .owl-carousel, .flickr_ul, .images');
+					var $links = $linksParentContainer.find(gallerySelectors);
+					//for cloned owl-carousel items - continue to prevent duplicating - moved to EACH loop
+					//start index does not work with owl-carousel loop enabled
+					// if ($linksParentContainer.is('.owl-carousel')) {
+					// 	$links = $links.filter(function (index) {
+					// 		return !($(this).closest('.cloned').length);
+					// 	});
+					// }
+					//if no container only adding this link
+					if (!$links.length) {
+						$links.push($link);
 					}
-					var filterValue = $( this ).attr('data-filter');
-					$(this).siblings().removeClass('selected active');
-					$(this).addClass('selected active');
-					
-					//removing old items
-					for (var i = $carousel.find('.owl-item').length - 1; i >= 0; i--) {
-						$carousel.trigger('remove.owl.carousel', [1]);
+					var items = [];
+					var options = {
+						bgOpacity: 0.7,
+						showHideOpacity: true,
+						history: false,
+						shareEl: false,
+						//data index is set in owl carousel init
+						index: $link.data('index') ? $link.data('index') : 0
 					};
-
-					//adding new items
-					var $filteredItems = $($carousel.next().find(' > ' +filterValue).clone());
-					$filteredItems.each(function() {
-						$carousel.trigger('add.owl.carousel', $(this));
-						$(this).addClass('scaleAppear');
+					var gallery = $('.pswp')[0];
+					//building items array
+					$links.each(function (i) {
+						var $this = $(this);
+						//if cloned element (owl or flexslider thumbs) - continue
+						if ($this.closest('.clone, .cloned').length) {
+							return;
+						}
+						//TODO think about hide items that are not showing after filtering and renew indexes for them
+						// if ($linksParentContainer.hasClass('isotope-wrapper') && !$this.is(':visible')) {
+						// 	return;
+						// }
+						var item = {};
+						//if not owl carousel
+						if (($link[0] === $this[0]) && !($link.data('index'))) {
+							//start from 0
+							if ($linksParentContainer.hasClass('owl-carousel') || $linksParentContainer.hasClass('images')) {
+								options.index = i - 1;
+							} else {
+								options.index = i;
+							}
+						}
+						//video or image
+						if ($this.data('iframe')) {
+							//for wordpress - iframe tag is escaped
+							//item.html = $this.data('iframe').replace(/&amp/g, '&').replace(/$lt;/g, '<').replace(/&gt;/g, '>').replace(/$quot;/g, '"');
+							//for html - building iframe manually
+							//autoplay only if 1 iframe in gallery
+							var autoplay = ($links.length > 1) ? '' : '&autoplay=1';
+							item.html = '<div class="embed-responsive embed-responsive-16by9">';
+							// item.html += '<iframe class="embed-responsive-item" src="'+ $(this).data('iframe') + '?rel=0&autoplay=1'+ '"></iframe>';
+							item.html += '<iframe class="embed-responsive-item" src="' + $(this).data('iframe') + '?rel=0' + autoplay + '&enablejsapi=1&api=1"></iframe>';
+							item.html += '</div>';
+						} else {
+							item.src = $this.attr('href');
+							//default values
+							var width = 1170;
+							var height = 780;
+							//template data on A element
+							var data = $this.data();
+							//image data in Woo
+							var dataImage = $this.find('img').first().data();
+							if (data.width) {
+								width = data.width;
+							}
+							if (data.height) {
+								height = data.height;
+							}
+							if (typeof dataImage !== 'undefined') {
+								if (dataImage.large_image_width) {
+									width = dataImage.large_image_width;
+								}
+								if (dataImage.large_image_height) {
+									height = dataImage.large_image_height;
+								}
+							}
+							item.w = width;
+							item.h = height;
+						}
+						items.push(item);
 					});
-					
-					$carousel.trigger('refresh.owl.carousel');
 
-					//reinit prettyPhoto in filtered OWL carousel
-					if ($().prettyPhoto) {
-						$carousel.find("a[data-gal^='prettyPhoto']").prettyPhoto({
-							hook: 'data-gal',
-							theme: 'facebook' /* light_rounded / dark_rounded / light_square / dark_square / facebook / pp_default*/
+					var pswpGallery = new PhotoSwipe(gallery, PhotoSwipeUI_Default, items, options);
+					pswpGallery.init();
+
+					//pausing video on close and on slide change
+					pswpGallery.listen('afterChange', function () {
+						$(pswpGallery.container).find('iframe').each(function () {
+							//"method":"pause" - form Vimeo, other - for YouTube
+							$(this)[0].contentWindow.postMessage('{"method":"pause","event":"command","func":"pauseVideo","args":""}', '*')
 						});
-					}
+					});
+					pswpGallery.listen('close', function () {
+						$(pswpGallery.container).find('iframe').each(function () {
+							//"method":"pause" - form Vimeo, other - for YouTube
+							$(this)[0].contentWindow.postMessage('{"method":"pause","event":"command","func":"pauseVideo","args":""}', '*')
+						});
+					});
+
 				});
-				
-			} //filters
-
-			$carousel.owlCarousel({
-				loop: loop,
-				margin: margin,
-				nav: nav,
-				autoplay: autoplay,
-				dots: dots,
-				themeClass: themeClass,
-				center: center,
-				navText: [navPrev,navNext],
-				mouseDrag: draggable,
-				touchDrag: draggable,
-				items: items,
-				responsive: {
-					0:{
-						items: responsiveXs
-					},
-					767:{
-						items: responsiveSm
-					},
-					992:{
-						items: responsiveMd
-					},
-					1200:{
-						items: responsiveLg
-					}
-				},
-			})
-			.addClass(themeClass);
-			if(center) {
-				$carousel.addClass('owl-center');
 			}
 
-			$window.on('resize', function() {
-				$carousel.trigger('refresh.owl.carousel');
-			});
-
-			//topline two synced carousels
-			if($carousel.hasClass('owl-news-slider-items') && syncedClass) {
-				$carousel.on('changed.owl.carousel', function(e) {
-					var indexTo = loop ? e.item.index+1 : e.item.index;
-					$(syncedClass).trigger('to.owl.carousel', [indexTo]);
-				})
-			}
-
-
-		});
-
-
-	} //eof owl-carousel
-
-	////////////////////
-	//header processing/
-	////////////////////
-	//stick header to top
-	//wrap header with div for smooth sticking
-	var $header = $('.page_header').first();
-	var boxed = $header.closest('.boxed').length;
-	var headerSticked = $('.header_side_sticked').length;
-	if ($header.length) {
-		//hiding main menu 1st levele elements that do not fit width
-		menuHideExtraElements();
-		//mega menu
-		initMegaMenu(1);
-		//wrap header for smooth stick and unstick
-		var headerHeight = $header.outerHeight();
-		$header.wrap('<div class="page_header_wrapper"></div>');
-		var $headerWrapper = $('.page_header_wrapper');
-		if (!boxed) {
-			$headerWrapper.css({height: headerHeight});
 		}
+	}
 
-		//headerWrapper background - same as header
-		if( $header.hasClass('ls') ) {
-			$headerWrapper.addClass('ls');
-			if ( $header.hasClass('ms') ) {
-				$headerWrapper.addClass('ms');
-			}
-		} else if ( $header.hasClass('ds') ) {
-			$headerWrapper.addClass('ds');
-			if ( $header.hasClass('bs') ) {
-				$headerWrapper.addClass('bs');
-			}
-			if ( $header.hasClass('ms') ) {
-				$headerWrapper.addClass('ms');
-			}
-
-		} else if ( $header.hasClass('cs') ) {
-			$headerWrapper.addClass('cs');
-			if ( $header.hasClass('cs2') ) {
-				$headerWrapper.addClass('cs2');
-			}
-			if ( $header.hasClass('cs3') ) {
-				$headerWrapper.addClass('cs3');
-			}
-		} else if ( $header.hasClass('gradient-background') ) {
-			$headerWrapper.addClass('gradient-background');
+	//helper functions to init elements only when they appears in viewport (jQUery.appear plugin)
+	function initAnimateElement(self, index) {
+		var animationClass = !self.data('animation') ? 'fadeInUp' : self.data('animation');
+		var animationDelay = !self.data('delay') ? 150 : self.data('delay');
+		setTimeout(function () {
+			self.addClass("animated " + animationClass);
+		}, index * animationDelay);
+	}
+	function initCounter(self) {
+		if (self.hasClass('counted')) {
+			return;
+		} else {
+			self.countTo().addClass('counted');
 		}
-
-		//get offset
-		var headerOffset = 0;
-		//check for sticked template headers
-		if (!boxed && !($headerWrapper.css('position') === 'fixed')) {
-			headerOffset = $header.offset().top;
-		}
-
-		//for boxed layout - show or hide main menu elements if width has been changed on affix
-		$header.on('affixed-top.bs.affix affixed.bs.affix affixed-bottom.bs.affix', function ( e ) {
-			if( $header.hasClass('affix-top') ) {
-				$headerWrapper.removeClass('affix-wrapper affix-bottom-wrapper').addClass('affix-top-wrapper');
-				//cs to ls when affixed
-				// if($header.hasClass('cs')) {
-				// 	$header.removeClass('ls');
-				// }
-			} else if ( $header.hasClass('affix') ) {
-				$headerWrapper.removeClass('affix-top-wrapper affix-bottom-wrapper').addClass('affix-wrapper');
-				//cs to ls when affixed
-				// if($header.hasClass('cs')) {
-				// 	$header.addClass('ls');
-				// }
-			} else if ( $header.hasClass('affix-bottom') ) {
-				$headerWrapper.removeClass('affix-wrapper affix-top-wrapper').addClass('affix-bottom-wrapper');
-			} else {
-				$headerWrapper.removeClass('affix-wrapper affix-top-wrapper affix-bottom-wrapper');
-			}
-
-			//calling this functions disable menu items animation when going from affix to affix-top with centered logo inside
-			//in boxed layouts header is always fixed
-			if (boxed && !($header.css('position') === 'fixed')) {
-				menuHideExtraElements();
-				initMegaMenu(1);
-			}
-			if(headerSticked) {
-				initMegaMenu(1);
-			}
-
+	}
+	function initProgressbar(el) {
+		el.progressbar({
+			transition_delay: 300
 		});
+	}
+	function initChart(el) {
+		var data = el.data();
+		var size = data.size ? data.size : 270;
+		var line = data.line ? data.line : 20;
+		var bgcolor = data.bgcolor ? data.bgcolor : '#ffffff';
+		var trackcolor = data.trackcolor ? data.trackcolor : '#c14240';
+		var speed = data.speed ? data.speed : 3000;
 
-		//if header has different height on afixed and affixed-top positions - correcting wrapper height
-		$header.on('affixed-top.bs.affix', function () {
-			// $headerWrapper.css({height: $header.outerHeight()});
-		});
-
-		//fixing auto affix bug - toggle affix on click when page is at the top
-		$header.on('affix.bs.affix', function(){
-			if( !$window.scrollTop() ) return false;
-		});
-
-		$header.affix({
-			offset: {
-				top: headerOffset,
-				bottom: -10
+		el.easyPieChart({
+			barColor: trackcolor,
+			trackColor: bgcolor,
+			scaleColor: false,
+			scaleLength: false,
+			lineCap: 'butt',
+			lineWidth: line,
+			size: size,
+			rotate: 0,
+			animate: speed,
+			onStep: function (from, to, percent) {
+				$(this.el).find('.percent').text(Math.round(percent));
 			}
 		});
 	}
 
-	//aside affix
-	initAffixSidebar();
+	function initGoogleMap() {
+		//Google Map script
+		var $googleMaps = $('#map, .page_map');
+		if ($googleMaps.length) {
+			$googleMaps.each(function () {
+				var $map = $(this);
 
-	$body.scrollspy('refresh');
+				var lat;
+				var lng;
+				var map;
 
-	//appear plugin is used to elements animation, counter, pieChart, bootstrap progressbar
-	if ($().appear) {
-		//animation to elements on scroll
-		var $animate = $('.animate');
-		$animate.appear();
+				//map styles. You can grab different styles on https://snazzymaps.com/
 
-		$animate.filter(':appeared').each(function(index){
-			initAnimateElement($(this), index);
+				//dark style
+				//var styles = [{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#c4c4c4"}]},{"featureType":"administrative.neighborhood","elementType":"labels.text.fill","stylers":[{"color":"#707070"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21},{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#be2026"},{"lightness":"0"},{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.text.stroke","stylers":[{"visibility":"off"},{"hue":"#ff000a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#575757"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"labels.text.stroke","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#999999"}]},{"featureType":"road.local","elementType":"labels.text.stroke","stylers":[{"saturation":"-52"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}];
+
+				// light style
+				var styles = [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#e9e9e9" }, { "lightness": 17 }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 20 }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 18 }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 16 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 21 }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#dedede" }, { "lightness": 21 }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 }] }, { "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#f2f2f2" }, { "lightness": 19 }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#fefefe" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 }] }];
+
+				//markers
+				var $markers = $map.find('.marker');
+
+				//map settings
+				var address = $markers.first().find('.marker-address').text() ? $markers.first().find('.marker-address').text() : 'london, baker street, 221b';
+				var geocoder = new google.maps.Geocoder();
+
+
+				var draggable = $map.data('draggable') ? $map.data('draggable') : false;
+				var scrollwheel = $map.data('scrollwheel') ? $map.data('scrollwheel') : false;
+
+				//type your address after "address="
+				geocoder.geocode({
+					address: address
+				}, function (data) {
+
+					lat = data[0].geometry.location.lat();
+					lng = data[0].geometry.location.lng();
+
+					var center = new google.maps.LatLng(lat, lng);
+					var settings = {
+						mapTypeId: google.maps.MapTypeId.ROADMAP,
+						zoom: 16,
+						draggable: draggable,
+						scrollwheel: scrollwheel,
+						center: center,
+						styles: styles
+					};
+					map = new google.maps.Map($map[0], settings);
+
+					var infoWindows = [];
+
+					$($markers).each(function (index) {
+
+						var $marker = $(this);
+						var markerTitle = $marker.find('.marker-title').text();
+
+						//building info widnow HTML code
+						var markerDescription = '';
+						markerDescription += markerTitle ? '<h3 class="makret-title">' + markerTitle + '</h3>' : '';
+						markerDescription += $marker.find('.marker-description').html() ? '<div class="marker-description">' + $marker.find('.marker-description').html() + '</div>' : '';
+						if (markerDescription) {
+							markerDescription = '<div class="map_marker_description">' + markerDescription + '</div>';
+						}
+
+						geocoder.geocode({
+							address: $marker.find('.marker-address').text()
+						}, function (data) {
+							var iconSrc = $marker.find('.marker-icon').attr('src');
+
+							var lat = data[0].geometry.location.lat();
+							var lng = data[0].geometry.location.lng();
+
+							var center = new google.maps.LatLng(lat, lng);
+
+							var marker = new google.maps.Marker({
+								position: center,
+								title: markerTitle,
+								map: map,
+								icon: iconSrc
+							});
+
+							var infowindow = new google.maps.InfoWindow({
+								content: markerDescription
+							});
+
+							infoWindows.push(infowindow);
+
+							google.maps.event.addListener(marker, 'click', function () {
+								for (var i = 0; i < infoWindows.length; i++) {
+									infoWindows[i].close();
+								}
+								infowindow.open(map, marker);
+							});
+						});
+					});
+				});
+			}); //each Google map
+		}//google map length
+	}
+
+	//function that initiating template plugins on window.load event
+	function documentReadyInit() {
+		////////////
+		//mainmenu//
+		////////////
+		if ($().scrollbar) {
+			$('[class*="scrollbar-"]').scrollbar();
+		}
+		if ($().superfish) {
+			$('ul.sf-menu').superfish({
+				popUpSelector: 'ul:not(.mega-menu ul), .mega-menu ',
+				delay: 700,
+				animation: { opacity: 'show', marginTop: 0 },
+				animationOut: { opacity: 'hide', marginTop: 5 },
+				speed: 200,
+				speedOut: 200,
+				disableHI: false,
+				cssArrows: true,
+				autoArrows: true,
+				onInit: function () {
+					var $thisMenu = $(this);
+					$thisMenu.find('.sf-with-ul').after('<span class="sf-menu-item-mobile-toggler"/>');
+					$thisMenu.find('.sf-menu-item-mobile-toggler').on('click', function (e) {
+						var $parentLi = $(this).parent();
+						if ($parentLi.hasClass('sfHover')) {
+							$parentLi.superfish('hide');
+						} else {
+							$parentLi.superfish('show');
+						}
+					});
+				}
+
+			});
+			$('ul.sf-menu-side').superfish({
+				popUpSelector: 'ul:not(.mega-menu ul), .mega-menu ',
+				delay: 500,
+				animation: { opacity: 'show', height: 100 + '%' },
+				animationOut: { opacity: 'hide', height: 0 },
+				speed: 400,
+				speedOut: 300,
+				disableHI: false,
+				cssArrows: true,
+				autoArrows: true
+			});
+		}
+
+
+		//toggle mobile menu
+		$('.page_header .toggle_menu, .page_toplogo .toggle_menu').on('click', function () {
+			$(this)
+				.toggleClass('mobile-active')
+				.closest('.page_header')
+				.toggleClass('mobile-active')
+				.end()
+				.closest('.page_toplogo')
+				.next()
+				.find('.page_header')
+				.toggleClass('mobile-active');
 		});
 
-		$body.on('appear', '.animate', function(e, $affected ) {
-			$($affected).each(function(index){
+		$('.sf-menu a').on('click', function () {
+			var $this = $(this);
+			//If this is a local link or item with sumbenu - not toggling menu
+			if (($this.hasClass('sf-with-ul')) || !($this.attr('href').charAt(0) === '#')) {
+				return;
+			}
+			$this
+				.closest('.page_header')
+				.toggleClass('mobile-active')
+				.find('.toggle_menu')
+				.toggleClass('mobile-active');
+		});
+
+		//side header processing
+		var $sideHeader = $('.page_header_side');
+		// toggle sub-menus visibility on menu-click
+		$('ul.menu-click').find('li').each(function () {
+			var $thisLi = $(this);
+			//toggle submenu only for menu items with submenu
+			if ($thisLi.find('ul').length) {
+				$thisLi
+					.append('<span class="toggle_submenu color-darkgrey"></span>')
+					//adding anchor
+					.find('.toggle_submenu, > a')
+					.on('click', function (e) {
+						var $thisSpanOrA = $(this);
+						//if this is a link and it is already opened - going to link
+						if (($thisSpanOrA.attr('href') === '#') || !($thisSpanOrA.parent().hasClass('active-submenu'))) {
+							e.preventDefault();
+						}
+						if ($thisSpanOrA.parent().hasClass('active-submenu')) {
+							$thisSpanOrA.parent().removeClass('active-submenu');
+							return;
+						}
+						$thisLi.addClass('active-submenu').siblings().removeClass('active-submenu');
+					});
+			} //eof sumbenu check
+		});
+		if ($sideHeader.length) {
+			$('.toggle_menu_side').on('click', function () {
+				var $thisToggler = $(this);
+				$thisToggler.toggleClass('active');
+				if ($thisToggler.hasClass('header-slide')) {
+					$sideHeader.toggleClass('active-slide-side-header');
+				} else {
+					if ($thisToggler.parent().hasClass('header_side_right')) {
+						$body.toggleClass('active-side-header slide-right');
+					} else {
+						$body.toggleClass('active-side-header');
+					}
+					$body.parent().toggleClass('html-active-push-header');
+				}
+				//fixing mega menu and aside affix on toggling side sticked header
+				if ($thisToggler.closest('.header_side_sticked').length) {
+					initMegaMenu(600);
+					var $affixAside = $('.affix-aside');
+					if ($affixAside.length) {
+						$affixAside.removeClass("affix affix-bottom").addClass("affix-top").css({ "width": "", "left": "" }).trigger('affix-top.bs.affix');
+						setTimeout(function () {
+							$affixAside.removeClass("affix affix-bottom").addClass("affix-top").css({ "width": "", "left": "" }).trigger('affix-top.bs.affix');
+						}, 10);
+					}
+				}
+			});
+			//hidding side header on click outside header
+			$body.on('mousedown touchstart', function (e) {
+				if (!($(e.target).closest('.page_header_side').length) && !($sideHeader.hasClass('header_side_sticked'))) {
+					$sideHeader.removeClass('active-slide-side-header');
+					$body.removeClass('active-side-header slide-right');
+					$body.parent().removeClass('html-active-push-header');
+					var $toggler = $('.toggle_menu_side');
+					if (($toggler).hasClass('active')) {
+						$toggler.removeClass('active');
+					}
+				}
+			});
+		} //sideHeader check
+
+		//1 and 2/3/4th level offscreen fix
+		var MainWindowWidth = $window.width();
+		$window.on('resize', function () {
+			MainWindowWidth = $(window).width();
+		});
+		//2/3/4 levels
+		$('.top-nav .sf-menu').on('mouseover', 'ul li', function () {
+			// $('.mainmenu').on('mouseover', 'ul li', function(){
+			if (MainWindowWidth > 991) {
+				var $this = $(this);
+				// checks if third level menu exist
+				var subMenuExist = $this.find('ul').length;
+				if (subMenuExist > 0) {
+					var subMenuWidth = $this.find('ul, div').first().width();
+					var subMenuOffset = $this.find('ul, div').first().parent().offset().left + subMenuWidth;
+					// if sub menu is off screen, give new position
+					if ((subMenuOffset + subMenuWidth) > MainWindowWidth) {
+						var newSubMenuPosition = subMenuWidth + 0;
+						$this.find('ul, div').first().css({
+							left: -newSubMenuPosition,
+						});
+					} else {
+						$this.find('ul, div').first().css({
+							left: '100%',
+						});
+					}
+				}
+			}
+			//1st level
+		}).on('mouseover', '> li', function () {
+			if (MainWindowWidth > 991) {
+				var $this = $(this);
+				var subMenuExist = $this.find('ul').length;
+				if (subMenuExist > 0) {
+					var subMenuWidth = $this.find('ul').width();
+					var subMenuOffset = $this.find('ul').parent().offset().left;
+					// if sub menu is off screen, give new position
+					if ((subMenuOffset + subMenuWidth) > MainWindowWidth) {
+						var newSubMenuPosition = MainWindowWidth - (subMenuOffset + subMenuWidth);
+						$this.find('ul').first().css({
+							left: newSubMenuPosition,
+						});
+					}
+				}
+			}
+		});
+
+		/////////////////////////////////////////
+		//single page localscroll and scrollspy//
+		/////////////////////////////////////////
+		var navHeight = $('.page_header').outerHeight(true);
+		//if sidebar nav exists - binding to it. Else - to main horizontal nav
+		if ($('.mainmenu_side_wrapper').length) {
+			$body.scrollspy({
+				target: '.mainmenu_side_wrapper',
+				offset: navHeight
+			});
+		} else if ($('.top-nav').length) {
+			$body.scrollspy({
+				target: '.top-nav',
+				offset: navHeight
+			})
+		}
+		if ($().localScroll) {
+			$('.top-nav > ul, .mainmenu_side_wrapper > ul, #land, .flexslider-bottom, .testimonials-btn, .comments-link, .btn-get-started').localScroll({
+				duration: 900,
+				easing: 'easeInOutQuart',
+				offset: -navHeight + 40
+			});
+		}
+
+		//background image teaser and sections with half image bg
+		//put this before prettyPhoto init because image may be wrapped in prettyPhoto link
+		$(".bg_teaser, .cover-image").each(function () {
+			var $element = $(this);
+			var $image = $element.find("img").first();
+			if (!$image.length) {
+				$image = $element.parent().find("img").first();
+			}
+			if (!$image.length) {
+				return;
+			}
+			var imagePath = $image.attr("src");
+			$element.css("background-image", "url(" + imagePath + ")");
+			var $imageParent = $image.parent();
+			//if image inside link - adding this link, removing gallery to preserve duplicating gallery items
+			if ($imageParent.is('a')) {
+				$element.prepend($image.parent().clone().html(''));
+				$imageParent.attr('data-gal', '');
+			}
+		});
+
+		//video images preview - from WP
+		$('.embed-placeholder').each(function () {
+			$(this).on('click', function (e) {
+				var $thisLink = $(this);
+				// if prettyPhoto popup with YouTube - return
+				if ($thisLink.attr('data-gal')) {
+					return;
+				}
+				e.preventDefault();
+				if ($thisLink.attr('href') === '' || $thisLink.attr('href') === '#') {
+					$thisLink.replaceWith($thisLink.data('iframe').replace(/&amp/g, '&').replace(/$lt;/g, '<').replace(/&gt;/g, '>').replace(/$quot;/g, '"')).trigger('click');
+				} else {
+					$thisLink.replaceWith('<iframe class="embed-responsive-item" src="' + $thisLink.attr('href') + '?rel=0&autoplay=1' + '"></iframe>');
+				}
+			});
+		});
+
+		//toTop
+		if ($().UItoTop) {
+			$().UItoTop({ easingType: 'easeInOutQuart' });
+		}
+
+		//parallax
+		if ($().parallax) {
+			$('.s-parallax').parallax("50%", 0.01);
+		}
+
+		//prettyPhoto
+		if ($().prettyPhoto) {
+			$("a[data-gal^='prettyPhoto']").prettyPhoto({
+				hook: 'data-gal',
+				theme: 'facebook' /* light_rounded / dark_rounded / light_square / dark_square / facebook / pp_default*/
+			});
+		}
+		initPhotoSwipe();
+
+		////////////////////////////////////////
+		//init Bootstrap JS components//
+		////////////////////////////////////////
+		//adding .form-control class for search widgets
+		$('[type="search"]').addClass('form-control');
+
+
+		//bootstrap carousel
+		if ($().carousel) {
+			$('.carousel').carousel();
+		}
+		//bootstrap tab - show first tab
+		$('.nav-tabs').each(function () {
+			$(this).find('a').first().tab('show');
+		});
+		//video in bootstrap tabs
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			var iframe = $(e.relatedTarget.hash).find('iframe');
+			var src = iframe.attr('src');
+			iframe.attr('src', '');
+			iframe.attr('src', src);
+		});
+
+		$('.tab-content').each(function () {
+			$(this).find('.tab-pane').first().addClass('fade in');
+		});
+		//bootstrap collapse - show first tab
+		$('.panel-group').each(function () {
+			$(this).find('a').first().filter('.collapsed').trigger('click');
+		});
+		//tooltip
+		if ($().tooltip) {
+			$('[data-toggle="tooltip"]').tooltip();
+		}
+
+		//comingsoon counter
+		if ($().countdown) {
+			var $counter = $('#comingsoon-countdown');
+			//today date plus month for demo purpose
+			var date = ($counter.data('date') !== 'undefined') ? $counter.data('date') : false;
+			if (date) {
+				date = new Date(date);
+			} else {
+				date = new Date();
+				date.setMonth(date.getMonth() + 1);
+			}
+			$counter.countdown({ until: date });
+		}
+
+		/////////////////////////////////////////////////
+		//PHP widgets - contact form, search, MailChimp//
+		/////////////////////////////////////////////////
+
+		//contact form processing
+		$('form.contact-form').on('submit', function (e) {
+			e.preventDefault();
+			var $form = $(this);
+			$($form).find('.contact-form-respond').remove();
+
+			//checking on empty values
+			$($form).find('[aria-required="true"], [required]').each(function (index) {
+				var $thisRequired = $(this);
+				if (!$thisRequired.val().length) {
+					$thisRequired
+						.addClass('invalid')
+						.on('focus', function () {
+							$thisRequired
+								.removeClass('invalid');
+						});
+				}
+			});
+			//if one of form fields is empty - exit
+			if ($form.find('[aria-required="true"], [required]').hasClass('invalid')) {
+				return;
+			}
+
+			//sending form data to PHP server if fields are not empty
+			var request = $form.serialize();
+			var ajax = jQuery.post("contact-form.php", request)
+				.done(function (data) {
+					$($form).find('[type="submit"]').attr('disabled', false).parent().append('<div class="contact-form-respond color-main mt-20">' + data + '</div>');
+					//cleaning form
+					var $formErrors = $form.find('.form-errors');
+					if (!$formErrors.length) {
+						$form[0].reset();
+					}
+				})
+				.fail(function (data) {
+					$($form).find('[type="submit"]').attr('disabled', false).blur().parent().append('<div class="contact-form-respond color-main mt-20">Mail cannot be sent. You need PHP server to send mail.</div>');
+				})
+		});
+
+
+		//search modal
+		$(".search_modal_button").on('click', function (e) {
+			e.preventDefault();
+			$('#search_modal').modal('show').find('input').first().focus();
+		});
+		//search form processing - not need in WP
+		$('form.searchform, form.search-form').on('submit', function (e) {
+
+			e.preventDefault();
+			var $form = $(this);
+			var $searchModal = $('#search_modal');
+			$searchModal.find('div.searchform-respond').remove();
+
+			//checking on empty values
+			$($form).find('[type="text"], [type="search"]').each(function (index) {
+				var $thisField = $(this);
+				if (!$thisField.val().length) {
+					$thisField
+						.addClass('invalid')
+						.on('focus', function () {
+							$thisField.removeClass('invalid')
+						});
+				}
+			});
+			//if one of form fields is empty - exit
+			if ($form.find('[type="text"]').hasClass('invalid')) {
+				return;
+			}
+
+			$searchModal.modal('show');
+			//sending form data to PHP server if fields are not empty
+			var request = $form.serialize();
+			var ajax = jQuery.post("search.php", request)
+				.done(function (data) {
+					$searchModal.append('<div class="searchform-respond">' + data + '</div>');
+				})
+				.fail(function (data) {
+					$searchModal.append('<div class="searchform-respond">Search cannot be done. You need PHP server to search.</div>');
+
+				})
+		});
+
+		//MailChimp subscribe form processing
+		$('.signup').on('submit', function (e) {
+			e.preventDefault();
+			var $form = $(this);
+			// update user interface
+			$form.find('.response').html('Adding email address...');
+			// Prepare query string and send AJAX request
+			jQuery.ajax({
+				url: 'mailchimp/store-address.php',
+				data: 'ajax=true&email=' + escape($form.find('.mailchimp_email').val()),
+				success: function (msg) {
+					$form.find('.response').html(msg);
+				}
+			});
+		});
+
+		//twitter
+		if ($().tweet) {
+			$('.twitter').tweet({
+				modpath: "./twitter/",
+				count: 2,
+				avatar_size: 48,
+				loading_text: 'loading twitter feed...',
+				join_text: 'auto',
+				username: 'michaeljackson',
+				template: "{avatar}<div class=\"tweet_right\">{join}<span class=\"tweet_text links-maincolor\">{tweet_text}</span>{time}</div>"
+			});
+		}
+
+		// init timetable
+		var $timetable = $('#timetable');
+		if ($timetable.length) {
+			// bind filter click
+			$('#timetable_filter').on('click', 'a', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var $thisA = $(this);
+				if ($thisA.hasClass('selected')) {
+					// return false;
+					return;
+				}
+				var selector = $thisA.attr('data-filter');
+				$timetable
+					.find('tbody td')
+					.removeClass('current')
+					.end()
+					.find(selector)
+					.closest('td')
+					.addClass('current');
+				$thisA.closest('ul').find('a').removeClass('selected');
+				$thisA.addClass('selected');
+			});
+		}
+
+	}
+
+	//function that initiating template plugins on window.load event
+	function windowLoadInit() {
+		//////////////
+		//flexslider//
+		//////////////
+		if ($().flexslider) {
+			//Team Slider Shortcode
+			jQuery('.flexslider.team-slider').flexslider({
+				slideshow: false,
+				directionNav: false,
+				manualControls: ".flex-control-nav-1 li",
+			});
+
+			var $introSlider = $(".page_slider .flexslider");
+			$introSlider.each(function (index) {
+				var $currentSlider = $(this);
+				var data = $currentSlider.data();
+				var nav = (data.nav !== 'undefined') ? data.nav : true;
+				var dots = (data.dots !== 'undefined') ? data.dots : true;
+				var speed = (data.speed !== 'undefined') ? data.speed : 7000;
+
+				$currentSlider.flexslider({
+					animation: "fade",
+					pauseOnHover: true,
+					useCSS: true,
+					controlNav: dots,
+					directionNav: nav,
+					prevText: "",
+					nextText: "",
+					smoothHeight: false,
+					slideshowSpeed: speed,
+					animationSpeed: 600,
+					start: function (slider) {
+						slider.find('.intro_layers').children().css({ 'visibility': 'hidden' });
+						slider.find('.flex-active-slide .intro_layers').children().each(function (index) {
+							var self = $(this);
+							var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
+							setTimeout(function () {
+								self.addClass("animated " + animationClass);
+							}, index * 500);
+						});
+					},
+					after: function (slider) {
+						slider.find('.flex-active-slide .intro_layers').children().each(function (index) {
+							var self = $(this);
+							var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
+							setTimeout(function () {
+								self.addClass("animated " + animationClass);
+							}, index * 500);
+						});
+					},
+					end: function (slider) {
+						slider.find('.intro_layers').children().each(function () {
+							var self = $(this);
+							var animationClass = !self.data('animation') ? 'fadeInDown' : self.data('animation');
+							self.removeClass('animated ' + animationClass).css({ 'visibility': 'hidden' });
+							// $(this).attr('class', '');
+						});
+					},
+
+				})
+				//wrapping nav with container - uncomment if need
+				// .find('.flex-control-nav')
+				// .wrap('<div class="container nav-container"/>')
+			}); //.page_slider flex slider
+
+			$(".flexslider").each(function (index) {
+				var $currentSlider = $(this);
+				//exit if intro slider already activated 
+				if ($currentSlider.find('.flex-active-slide').length) {
+					return;
+				}
+				$currentSlider.flexslider({
+					animation: "fade",
+					useCSS: true,
+					controlNav: true,
+					directionNav: false,
+					prevText: "",
+					nextText: "",
+					smoothHeight: false,
+					slideshowSpeed: 5000,
+					animationSpeed: 800,
+				})
+			});
+		}
+
+		////////////////
+		//owl carousel//
+		////////////////
+		if ($().owlCarousel) {
+			$('.owl-carousel').each(function () {
+				var $carousel = $(this);
+				$carousel.find('> *').each(function (i) {
+					$(this).attr('data-index', i);
+				});
+				var data = $carousel.data();
+
+				var loop = data.loop ? data.loop : false,
+					margin = (data.margin || data.margin === 0) ? data.margin : 30,
+					nav = data.nav ? data.nav : false,
+					navPrev = data.navPrev ? data.navPrev : '<i class="fa fa-angle-left">',
+					navNext = data.navNext ? data.navNext : '<i class="fa fa-angle-right">',
+					dots = data.dots ? data.dots : false,
+					themeClass = data.themeclass ? data.themeclass : 'owl-theme',
+					center = data.center ? data.center : false,
+					items = data.items ? data.items : 4,
+					autoplay = data.autoplay ? data.autoplay : false,
+					responsiveXs = data.responsiveXs ? data.responsiveXs : 1,
+					responsiveSm = data.responsiveSm ? data.responsiveSm : 2,
+					responsiveMd = data.responsiveMd ? data.responsiveMd : 3,
+					responsiveLg = data.responsiveLg ? data.responsiveLg : 4,
+					draggable = (data.draggable === false) ? data.draggable : true,
+					syncedClass = (data.syncedClass) ? data.syncedClass : false,
+					filters = data.filters ? data.filters : false;
+
+				if (filters) {
+					$carousel.after($carousel.clone().addClass('owl-carousel-filter-cloned'));
+					$(filters).on('click', 'a', function (e) {
+						//processing filter link
+						e.preventDefault();
+						if ($(this).hasClass('selected')) {
+							return;
+						}
+						var filterValue = $(this).attr('data-filter');
+						$(this).siblings().removeClass('selected active');
+						$(this).addClass('selected active');
+
+						//removing old items
+						for (var i = $carousel.find('.owl-item').length - 1; i >= 0; i--) {
+							$carousel.trigger('remove.owl.carousel', [1]);
+						};
+
+						//adding new items
+						var $filteredItems = $($carousel.next().find(' > ' + filterValue).clone());
+						$filteredItems.each(function () {
+							$carousel.trigger('add.owl.carousel', $(this));
+							$(this).addClass('scaleAppear');
+						});
+
+						$carousel.trigger('refresh.owl.carousel');
+
+						//reinit prettyPhoto in filtered OWL carousel
+						if ($().prettyPhoto) {
+							$carousel.find("a[data-gal^='prettyPhoto']").prettyPhoto({
+								hook: 'data-gal',
+								theme: 'facebook' /* light_rounded / dark_rounded / light_square / dark_square / facebook / pp_default*/
+							});
+						}
+					});
+
+				} //filters
+
+				$carousel.owlCarousel({
+					loop: loop,
+					margin: margin,
+					nav: nav,
+					autoplay: autoplay,
+					dots: dots,
+					themeClass: themeClass,
+					center: center,
+					navText: [navPrev, navNext],
+					mouseDrag: draggable,
+					touchDrag: draggable,
+					items: items,
+					responsive: {
+						0: {
+							items: responsiveXs
+						},
+						767: {
+							items: responsiveSm
+						},
+						992: {
+							items: responsiveMd
+						},
+						1200: {
+							items: responsiveLg
+						}
+					},
+				})
+					.addClass(themeClass);
+				if (center) {
+					$carousel.addClass('owl-center');
+				}
+
+				$window.on('resize', function () {
+					$carousel.trigger('refresh.owl.carousel');
+				});
+
+				//topline two synced carousels
+				if ($carousel.hasClass('owl-news-slider-items') && syncedClass) {
+					$carousel.on('changed.owl.carousel', function (e) {
+						var indexTo = loop ? e.item.index + 1 : e.item.index;
+						$(syncedClass).trigger('to.owl.carousel', [indexTo]);
+					})
+				}
+
+
+			});
+
+
+		} //eof owl-carousel
+
+		////////////////////
+		//header processing/
+		////////////////////
+		//stick header to top
+		//wrap header with div for smooth sticking
+		var $header = $('.page_header').first();
+		var boxed = $header.closest('.boxed').length;
+		var headerSticked = $('.header_side_sticked').length;
+		if ($header.length) {
+			//hiding main menu 1st levele elements that do not fit width
+			menuHideExtraElements();
+			//mega menu
+			initMegaMenu(1);
+			//wrap header for smooth stick and unstick
+			var headerHeight = $header.outerHeight();
+			$header.wrap('<div class="page_header_wrapper"></div>');
+			var $headerWrapper = $('.page_header_wrapper');
+			if (!boxed) {
+				$headerWrapper.css({ height: headerHeight });
+			}
+
+			//headerWrapper background - same as header
+			if ($header.hasClass('ls')) {
+				$headerWrapper.addClass('ls');
+				if ($header.hasClass('ms')) {
+					$headerWrapper.addClass('ms');
+				}
+			} else if ($header.hasClass('ds')) {
+				$headerWrapper.addClass('ds');
+				if ($header.hasClass('bs')) {
+					$headerWrapper.addClass('bs');
+				}
+				if ($header.hasClass('ms')) {
+					$headerWrapper.addClass('ms');
+				}
+
+			} else if ($header.hasClass('cs')) {
+				$headerWrapper.addClass('cs');
+				if ($header.hasClass('cs2')) {
+					$headerWrapper.addClass('cs2');
+				}
+				if ($header.hasClass('cs3')) {
+					$headerWrapper.addClass('cs3');
+				}
+			} else if ($header.hasClass('gradient-background')) {
+				$headerWrapper.addClass('gradient-background');
+			}
+
+			//get offset
+			var headerOffset = 0;
+			//check for sticked template headers
+			if (!boxed && !($headerWrapper.css('position') === 'fixed')) {
+				headerOffset = $header.offset().top;
+			}
+
+			//for boxed layout - show or hide main menu elements if width has been changed on affix
+			$header.on('affixed-top.bs.affix affixed.bs.affix affixed-bottom.bs.affix', function (e) {
+				if ($header.hasClass('affix-top')) {
+					$headerWrapper.removeClass('affix-wrapper affix-bottom-wrapper').addClass('affix-top-wrapper');
+					//cs to ls when affixed
+					// if($header.hasClass('cs')) {
+					// 	$header.removeClass('ls');
+					// }
+				} else if ($header.hasClass('affix')) {
+					$headerWrapper.removeClass('affix-top-wrapper affix-bottom-wrapper').addClass('affix-wrapper');
+					//cs to ls when affixed
+					// if($header.hasClass('cs')) {
+					// 	$header.addClass('ls');
+					// }
+				} else if ($header.hasClass('affix-bottom')) {
+					$headerWrapper.removeClass('affix-wrapper affix-top-wrapper').addClass('affix-bottom-wrapper');
+				} else {
+					$headerWrapper.removeClass('affix-wrapper affix-top-wrapper affix-bottom-wrapper');
+				}
+
+				//calling this functions disable menu items animation when going from affix to affix-top with centered logo inside
+				//in boxed layouts header is always fixed
+				if (boxed && !($header.css('position') === 'fixed')) {
+					menuHideExtraElements();
+					initMegaMenu(1);
+				}
+				if (headerSticked) {
+					initMegaMenu(1);
+				}
+
+			});
+
+			//if header has different height on afixed and affixed-top positions - correcting wrapper height
+			$header.on('affixed-top.bs.affix', function () {
+				// $headerWrapper.css({height: $header.outerHeight()});
+			});
+
+			//fixing auto affix bug - toggle affix on click when page is at the top
+			$header.on('affix.bs.affix', function () {
+				if (!$window.scrollTop()) return false;
+			});
+
+			$header.affix({
+				offset: {
+					top: headerOffset,
+					bottom: -10
+				}
+			});
+		}
+
+		//aside affix
+		initAffixSidebar();
+
+		$body.scrollspy('refresh');
+
+		//appear plugin is used to elements animation, counter, pieChart, bootstrap progressbar
+		if ($().appear) {
+			//animation to elements on scroll
+			var $animate = $('.animate');
+			$animate.appear();
+
+			$animate.filter(':appeared').each(function (index) {
 				initAnimateElement($(this), index);
 			});
-		});
 
-		//counters init on scroll
-		if ($().countTo) {
-			var $counter = $('.counter');
-			$counter.appear();
-			
-			$counter.filter(':appeared').each(function(){
-				initCounter($(this));
+			$body.on('appear', '.animate', function (e, $affected) {
+				$($affected).each(function (index) {
+					initAnimateElement($(this), index);
+				});
 			});
-			$body.on('appear', '.counter', function(e, $affected ) {
-				$($affected).each(function(){
+
+			//counters init on scroll
+			if ($().countTo) {
+				var $counter = $('.counter');
+				$counter.appear();
+
+				$counter.filter(':appeared').each(function () {
 					initCounter($(this));
 				});
-			});
-		}
-	
-		//bootstrap animated progressbar
-		if ($().progressbar) {
-			var $progressbar = $('.progress .progress-bar');
-			$progressbar.appear();
-
-			$progressbar.filter(':appeared').each(function(){
-				initProgressbar($(this));
-			});
-			$body.on('appear', '.progress .progress-bar', function(e, $affected ) {
-				$($affected).each(function(){
-					initProgressbar($(this));
-				});
-			});
-			//animate progress bar inside bootstrap tab
-			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-				initProgressbar($($(e.target).attr('href')).find('.progress .progress-bar'));
-			});
-			//animate progress bar inside bootstrap dropdown
-			$('.dropdown').on('shown.bs.dropdown', function(e) {
-				initProgressbar($(this).find('.progress .progress-bar'));
-			});
-		}
-
-		//circle progress bar
-		if ($().easyPieChart) {
-			var $chart = $('.chart');
-
-			$chart.appear();
-
-			$chart.filter(':appeared').each(function(){
-				initChart($(this));
-			});
-			$body.on('appear', '.chart', function(e, $affected ) {
-				$($affected).each(function(){
-					initChart($(this));
-				});
-			});
-
-		}
-
-	} //appear check
-
-	//Flickr widget
-	// use http://idgettr.com/ to find your ID
-	if ($().jflickrfeed) {
-		var $flickr = $("#flickr, .flickr_ul");
-		if ( $flickr.length ) {
-			if ( ! ( $flickr.hasClass('flickr_loaded') ) ) {
-				$flickr.jflickrfeed({
-					flickrbase: "http://api.flickr.com/services/feeds/",
-					limit: 4,
-					qstrings: {
-						id: "131791558@N04"
-					},
-					itemTemplate: '<a href="{{image_b}}" class="photoswipe-link"><li><img alt="{{title}}" src="{{image_m}}" /></li></a>'
-				//complete
-				}, function(data) {
-					initPhotoSwipe();
-				}).addClass('flickr_loaded');
-			}
-		}
-	}
-
-	// Instagram widget
-	if($().spectragram) {
-		var Spectra = {
-			instaToken: '3905738328.60c782d.b65ed3f058d64e6ab32c110c6ac12d9b',
-			instaID: '60c782dfecaf4050b59ff4c159246641',
-
-			init: function () {
-				jQuery.fn.spectragram.accessData = {
-					accessToken: this.instaToken,
-					clientID: this.instaID
-				};
-
-				//available methods: getUserFeed, getRecentTagged
-				$('.instafeed').each(function(){
-					var $this = $(this);
-					if ($this.find('img').length) {
-						return;
-					}
-					$this.spectragram('getRecentTagged',{
-						max: 8,
-						//pass username if you are using getUserFeed method
-						query: 'grey',
-						wrapEachWith: '<div class="photo">'
+				$body.on('appear', '.counter', function (e, $affected) {
+					$($affected).each(function () {
+						initCounter($(this));
 					});
 				});
 			}
+
+			//bootstrap animated progressbar
+			if ($().progressbar) {
+				var $progressbar = $('.progress .progress-bar');
+				$progressbar.appear();
+
+				$progressbar.filter(':appeared').each(function () {
+					initProgressbar($(this));
+				});
+				$body.on('appear', '.progress .progress-bar', function (e, $affected) {
+					$($affected).each(function () {
+						initProgressbar($(this));
+					});
+				});
+				//animate progress bar inside bootstrap tab
+				$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+					initProgressbar($($(e.target).attr('href')).find('.progress .progress-bar'));
+				});
+				//animate progress bar inside bootstrap dropdown
+				$('.dropdown').on('shown.bs.dropdown', function (e) {
+					initProgressbar($(this).find('.progress .progress-bar'));
+				});
+			}
+
+			//circle progress bar
+			if ($().easyPieChart) {
+				var $chart = $('.chart');
+
+				$chart.appear();
+
+				$chart.filter(':appeared').each(function () {
+					initChart($(this));
+				});
+				$body.on('appear', '.chart', function (e, $affected) {
+					$($affected).each(function () {
+						initChart($(this));
+					});
+				});
+
+			}
+
+		} //appear check
+
+		//Flickr widget
+		// use http://idgettr.com/ to find your ID
+		if ($().jflickrfeed) {
+			var $flickr = $("#flickr, .flickr_ul");
+			if ($flickr.length) {
+				if (!($flickr.hasClass('flickr_loaded'))) {
+					$flickr.jflickrfeed({
+						flickrbase: "http://api.flickr.com/services/feeds/",
+						limit: 4,
+						qstrings: {
+							id: "131791558@N04"
+						},
+						itemTemplate: '<a href="{{image_b}}" class="photoswipe-link"><li><img alt="{{title}}" src="{{image_m}}" /></li></a>'
+						//complete
+					}, function (data) {
+						initPhotoSwipe();
+					}).addClass('flickr_loaded');
+				}
+			}
 		}
 
-		Spectra.init();
-	}
+		// Instagram widget
+		if ($().spectragram) {
+			var Spectra = {
+				instaToken: '3905738328.60c782d.b65ed3f058d64e6ab32c110c6ac12d9b',
+				instaID: '60c782dfecaf4050b59ff4c159246641',
 
-	// init Isotope
-	$('.isotope-wrapper').each(function(index) {
-		var $container = $(this);
-		var layoutMode = ($container.hasClass('masonry-layout')) ? 'masonry' : 'fitRows';
-		var columnWidth = ($container.children('.col-md-4').length) ? '.col-md-4' : false;
-		$container.isotope({
-			percentPosition: true,
-			layoutMode: layoutMode,
-			masonry: {
-				//TODO for big first element in grid - giving smaller element to use as grid
-				// columnWidth: '.isotope-wrapper > .col-md-4'
-				columnWidth: columnWidth
+				init: function () {
+					jQuery.fn.spectragram.accessData = {
+						accessToken: this.instaToken,
+						clientID: this.instaID
+					};
+
+					//available methods: getUserFeed, getRecentTagged
+					$('.instafeed').each(function () {
+						var $this = $(this);
+						if ($this.find('img').length) {
+							return;
+						}
+						$this.spectragram('getRecentTagged', {
+							max: 8,
+							//pass username if you are using getUserFeed method
+							query: 'grey',
+							wrapEachWith: '<div class="photo">'
+						});
+					});
+				}
+			}
+
+			Spectra.init();
+		}
+
+		// init Isotope
+		$('.isotope-wrapper').each(function (index) {
+			var $container = $(this);
+			var layoutMode = ($container.hasClass('masonry-layout')) ? 'masonry' : 'fitRows';
+			var columnWidth = ($container.children('.col-md-4').length) ? '.col-md-4' : false;
+			$container.isotope({
+				percentPosition: true,
+				layoutMode: layoutMode,
+				masonry: {
+					//TODO for big first element in grid - giving smaller element to use as grid
+					// columnWidth: '.isotope-wrapper > .col-md-4'
+					columnWidth: columnWidth
+				}
+			});
+
+			var $filters = $container.attr('data-filters') ? $($container.attr('data-filters')) : $container.prev().find('.filters');
+			// bind filter click
+			if ($filters.length) {
+				$filters.on('click', 'a', function (e) {
+					e.preventDefault();
+					var $thisA = $(this);
+					var filterValue = $thisA.attr('data-filter');
+					$container.isotope({ filter: filterValue });
+					$thisA.siblings().removeClass('selected active');
+					$thisA.addClass('selected active');
+				});
+				//for works on select
+				$filters.on('change', 'select', function (e) {
+					e.preventDefault();
+					var filterValue = $(this).val();
+					$container.isotope({ filter: filterValue });
+				});
 			}
 		});
 
-		var $filters = $container.attr('data-filters') ? $($container.attr('data-filters')) : $container.prev().find('.filters');
-		// bind filter click
-		if ($filters.length) {
-			$filters.on( 'click', 'a', function( e ) {
-				e.preventDefault();
-				var $thisA = $(this);
-				var filterValue = $thisA.attr('data-filter');
-				$container.isotope({ filter: filterValue });
-				$thisA.siblings().removeClass('selected active');
-				$thisA.addClass('selected active');
-			});
-			//for works on select
-			$filters.on( 'change', 'select', function( e ) {
-				e.preventDefault();
-				var filterValue = $(this).val();
-				$container.isotope({ filter: filterValue });
-			});
-		}
-	});
 
+		/////////
+		//SHOP///
+		/////////
+		jQuery('.plus, .minus').on('click', function (e) {
+			var numberField = jQuery(this).parent().find('[type="number"]');
+			var currentVal = numberField.val();
+			var sign = jQuery(this).val();
+			if (sign === '-') {
+				if (currentVal > 1) {
+					numberField.val(parseFloat(currentVal) - 1);
+				}
+			} else {
+				numberField.val(parseFloat(currentVal) + 1);
+			}
+		});
 
-	/////////
-	//SHOP///
-	/////////
-	 jQuery('.plus, .minus').on('click', function (e) {
-            var numberField = jQuery(this).parent().find('[type="number"]');
-            var currentVal = numberField.val();
-            var sign = jQuery(this).val();
-            if (sign === '-') {
-                if (currentVal > 1) {
-                    numberField.val(parseFloat(currentVal) - 1);
-                }
-            } else {
-        numberField.val(parseFloat(currentVal) + 1);
-            }
-        });
-
-		$('#toggle_shop_view').on('click', function( e ) {
+		$('#toggle_shop_view').on('click', function (e) {
 			e.preventDefault();
 			$(this).toggleClass('grid-view');
 			$('#products').toggleClass('grid-view list-view');
@@ -1417,11 +1417,11 @@ function windowLoadInit() {
 
 
 		//checkout collapse forms - only for HTML
-		$('a.showlogin, a.showcoupon').on('click', function( e ) {
+		$('a.showlogin, a.showcoupon').on('click', function (e) {
 			e.preventDefault();
 			var $form = $(this).parent().next();
 
-			if($form.css('display') === 'none') {
+			if ($form.css('display') === 'none') {
 				$form.show(150);
 			} else {
 				$form.hide(150);
@@ -1430,7 +1430,7 @@ function windowLoadInit() {
 
 
 		//remove product from cart - only for HTML
-		$('a.remove').on('click', function( e ) {
+		$('a.remove').on('click', function (e) {
 			e.preventDefault();
 			$(this).closest('tr, .media').remove();
 		});
@@ -1445,39 +1445,39 @@ function windowLoadInit() {
 		});
 
 		//tabs - only for HTML
-		$( '.wc-tab, .woocommerce-tabs .panel:not(.panel .panel)' ).hide();
+		$('.wc-tab, .woocommerce-tabs .panel:not(.panel .panel)').hide();
 
-		$('.wc-tabs li a, ul.tabs li a').on( 'click', function( e ) {
+		$('.wc-tabs li a, ul.tabs li a').on('click', function (e) {
 			e.preventDefault();
-			var $tab          = $( this );
-			var $tabs_wrapper = $tab.closest( '.wc-tabs-wrapper, .woocommerce-tabs' );
-			var $tabs         = $tabs_wrapper.find( '.wc-tabs, ul.tabs' );
+			var $tab = $(this);
+			var $tabs_wrapper = $tab.closest('.wc-tabs-wrapper, .woocommerce-tabs');
+			var $tabs = $tabs_wrapper.find('.wc-tabs, ul.tabs');
 
-			$tabs.find( 'li' ).removeClass( 'active' );
-			$tabs_wrapper.find( '.wc-tab, .panel:not(.panel .panel)' ).hide();
+			$tabs.find('li').removeClass('active');
+			$tabs_wrapper.find('.wc-tab, .panel:not(.panel .panel)').hide();
 
-			$tab.closest( 'li' ).addClass( 'active' );
-			$tabs_wrapper.find( $tab.attr( 'href' ) ).show();
-		} );
+			$tab.closest('li').addClass('active');
+			$tabs_wrapper.find($tab.attr('href')).show();
+		});
 		// Review link
-		$('a.woocommerce-review-link').on( 'click', function() {
-			$( '.reviews_tab a' ).trigger('click');
+		$('a.woocommerce-review-link').on('click', function () {
+			$('.reviews_tab a').trigger('click');
 			return true;
 		});
 
 		//parsing URL hash
-		var hash  = window.location.hash;
-		var url   = window.location.href;
-		var $tabs = $( '.wc-tabs, ul.tabs' ).first();
+		var hash = window.location.hash;
+		var url = window.location.href;
+		var $tabs = $('.wc-tabs, ul.tabs').first();
 
-		if ( hash.toLowerCase().indexOf( 'comment-' ) >= 0 || hash === '#reviews' || hash === '#tab-reviews' ) {
-			$tabs.find( 'li.reviews_tab a' ).trigger('click');
-		} else if ( url.indexOf( 'comment-page-' ) > 0 || url.indexOf( 'cpage=' ) > 0 ) {
-			$tabs.find( 'li.reviews_tab a' ).trigger('click');
-		} else if ( hash === '#tab-additional_information' ) {
-			$tabs.find( 'li.additional_information_tab a' ).trigger('click');
+		if (hash.toLowerCase().indexOf('comment-') >= 0 || hash === '#reviews' || hash === '#tab-reviews') {
+			$tabs.find('li.reviews_tab a').trigger('click');
+		} else if (url.indexOf('comment-page-') > 0 || url.indexOf('cpage=') > 0) {
+			$tabs.find('li.reviews_tab a').trigger('click');
+		} else if (hash === '#tab-additional_information') {
+			$tabs.find('li.additional_information_tab a').trigger('click');
 		} else {
-			$tabs.find( 'li:first a' ).trigger('click');
+			$tabs.find('li:first a').trigger('click');
 		}
 
 
@@ -1491,10 +1491,10 @@ function windowLoadInit() {
 					range: true,
 					min: 0,
 					max: 100000,
-					values: [ 1500, 30000 ],
-					slide: function( event, ui ) {
-						$priceMin.val( ui.values[ 0 ] );
-						$priceMax.val( ui.values[ 1 ] );
+					values: [1500, 30000],
+					slide: function (event, ui) {
+						$priceMin.val(ui.values[0]);
+						$priceMax.val(ui.values[1]);
 					}
 				});
 				$priceMin.val($rangeSlider.slider("values", 0));
@@ -1531,73 +1531,124 @@ function windowLoadInit() {
 			});
 
 		//color filter
-		$(".color-filters").find("a[data-background-color]").each(function() {
-			$(this).css({"background-color" : $(this).data("background-color")});
+		$(".color-filters").find("a[data-background-color]").each(function () {
+			$(this).css({ "background-color": $(this).data("background-color") });
 		});
-	////////////////
-	// end of SHOP//
-	////////////////
+		////////////////
+		// end of SHOP//
+		////////////////
 
 
 
-	//Unyson or other messages modal
-	var $messagesModal = $('#messages_modal');
-	if ($messagesModal.find('ul').length) {
-		$messagesModal.modal('show');
-	}
+		//Unyson or other messages modal
+		var $messagesModal = $('#messages_modal');
+		if ($messagesModal.find('ul').length) {
+			$messagesModal.modal('show');
+		}
 
-	//page preloader
-	$(".preloaderimg").fadeOut(150);
-	$(".preloader").fadeOut(150).delay(50, function(){
-		$(this).remove();
+		//page preloader
+		$(".preloaderimg").fadeOut(150);
+		$(".preloader").fadeOut(150).delay(50, function () {
+			$(this).remove();
+		});
+	}//eof windowLoadInit
+
+	$(document).ready(function () {
+		documentReadyInit();
+		initGoogleMap();
 	});
-}//eof windowLoadInit
 
-$(document).ready(function() {
-	documentReadyInit();
-	initGoogleMap();
-});
+	$window.on('load', function () {
+		windowLoadInit();
+	}); //end of "window load" event
 
-$window.on('load', function(){
-	windowLoadInit();
-}); //end of "window load" event
+	$window.on('resize', function () {
 
-$window.on('resize', function(){
+		$body.scrollspy('refresh');
 
-	$body.scrollspy('refresh');
-
-	//header processing
-	menuHideExtraElements();
-	initMegaMenu(1);
-	var $header = $('.page_header').first();
+		//header processing
+		menuHideExtraElements();
+		initMegaMenu(1);
+		var $header = $('.page_header').first();
 		//checking document scrolling position
 		if ($header.length && !$(document).scrollTop() && $header.first().data('bs.affix')) {
 			$header.first().data('bs.affix').options.offset.top = $header.offset().top;
 		}
-	if (!$header.closest('.boxed').length) {
-		var affixed = false;
-		if($header.hasClass('affix')) {
-			affixed = true;
-			//animation duration
-			$header.removeClass('affix');
+		if (!$header.closest('.boxed').length) {
+			var affixed = false;
+			if ($header.hasClass('affix')) {
+				affixed = true;
+				//animation duration
+				$header.removeClass('affix');
 
-			//TODO fix header wrapper height from small to large when page is scrolled (not top)
-			setTimeout(function () {
+				//TODO fix header wrapper height from small to large when page is scrolled (not top)
+				setTimeout(function () {
+					//editing header wrapper height for smooth stick and unstick
+					$(".page_header_wrapper").css({ height: $header.first().outerHeight() });
+					$header.addClass('affix');
+				}, 250);
+			}
+
+			if (!affixed) {
 				//editing header wrapper height for smooth stick and unstick
-				$(".page_header_wrapper").css({height: $header.first().outerHeight()});
-				$header.addClass('affix');
-			}, 250);
+				$(".page_header_wrapper").css({ height: $header.first().outerHeight() });
+			}
 		}
 
-		if(!affixed) {
-			//editing header wrapper height for smooth stick and unstick
-			$(".page_header_wrapper").css({height: $header.first().outerHeight()});
-		}
-	}
-	
-});
+	});
 
-//end of IIFE function
+	//end of IIFE function
 })(jQuery);
 
 
+
+
+//facebook link to app on mobile:
+window.mobileAndTabletcheck = function () {
+	var check = false;
+	(function (a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true; })(navigator.userAgent || navigator.vendor || window.opera);
+	return check;
+}();
+
+function getMobileOperatingSystem() {
+	var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+	// Windows Phone must come first because its UA also contains "Android"
+	if (/windows phone/i.test(userAgent)) {
+		return "Windows Phone";
+	}
+
+	if (/android/i.test(userAgent)) {
+		return "Android";
+	}
+
+	// iOS detection from: http://stackoverflow.com/a/9039885/177710
+	if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+		return "iOS";
+	}
+
+	return "unknown";
+}
+
+if(window.mobileAndTabletcheck){
+
+	var platform = getMobileOperatingSystem();
+
+	if(platform === 'Android'){
+		$('#mobile-tablet-android-facebook-link').show();
+	}
+
+	if(platform === 'iOS'){
+		$('#mobile-tablet-ios-facebook-link').show();
+	}
+
+	if(platform === 'Windows Phone'){
+		$('#desktop-facebook-link').show();
+	}
+
+	if(platform === 'unknown'){
+		$('#desktop-facebook-link').show();
+	}
+} else{
+	$('#desktop-facebook-link').show();
+}
