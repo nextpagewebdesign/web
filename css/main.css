@@ -18489,7 +18489,7 @@ a.btn {
 }
 
 .page_footer .col-md-12 .widget_social_buttons {
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 
 @media (max-width: 1199px) {
@@ -23130,4 +23130,13 @@ h5 {
 
 .widget_social_buttons a[class*='fa-']:before{
 	font-size: 47px;
+}
+
+.widget_social_buttons{
+	margin-top: -21px;
+}
+
+.widget_social_buttons a {
+	padding-bottom: 24px;
+	margin-bottom: -40px;
 }
