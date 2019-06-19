@@ -20689,11 +20689,23 @@ h4.margin {
 	}
 }
 
+.mobile-profile-portrait {
+	display: none!important;
+}
+
 @media (max-width: 767px) {
 	.shortcode-team-slider .flexslider .slides img {
-		position: relative;
-		right: 87px;
+		/* position: relative; */
+		/* right: 87px; */
 	}
+
+	.desktop-profile-portrait {
+		display: none!important;
+	}
+
+	.mobile-profile-portrait{
+		display: block!important;
+	} 
 }
 
 @media (max-width: 767px) {

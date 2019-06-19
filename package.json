@@ -10,6 +10,8 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "delaunay-triangulate": "^1.1.6",
+    "dotenv": "8.0.0",
     "express": "^4.16.4"
   },
   "engines": {

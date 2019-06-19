@@ -1,4 +1,5 @@
 "use strict";
+
 //Wrapping all JavaScript code into a IIFE function for prevent global variables creation
 (function ($) {
 
