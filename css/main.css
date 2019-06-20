@@ -20695,8 +20695,8 @@ h4.margin {
 
 @media (max-width: 767px) {
 	.shortcode-team-slider .flexslider .slides img {
-		/* position: relative; */
-		/* right: 87px; */
+		position: relative; 
+		right: 140px;
 	}
 
 	.desktop-profile-portrait {
