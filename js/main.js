@@ -10,7 +10,7 @@
 
     var controller = new ScrollMagic.Controller();
 
-    var scene = new ScrollMagic.Scene({ duration: 3000 })
+    var scene = new ScrollMagic.Scene({ duration: 1500 })
         .setPin("#canvas")
         //.addIndicators({name: "1 (duration: 300)"}) // add indicators (requires plugin)
         .addTo(controller);
@@ -73,7 +73,7 @@
     }
 
     let howFarAlongTheAnimationIsOnAScaleOfZeroToOne = function(time) {
-        let cycleDist = 1000;
+        let cycleDist = 750;
         //return (window.scrollY) / cycleDist;
         let tran = (window.scrollY) / cycleDist;
         tran = tran * 3;
@@ -88,8 +88,8 @@
         // tranShow.html(t);
 
         //move the logo up before the text comes in
-        var logoMoveStart = 3.5;
-        var logoMoveEnd = 5.5;
+        var logoMoveStart = 2.5;
+        var logoMoveEnd = 3.5;
         //if (t > logoMoveStart && t < logoMoveEnd) {
         var tt = convertToZeroOne(t, logoMoveStart, logoMoveEnd);
         tt = EasingFunctions.easeInOutQuad(tt);
@@ -107,13 +107,13 @@
         // modernText.style.letterSpacing = (100 * tt - 50) + 'px';
         // modernText.style.textIndent = (100 * tt - 50) + 'px';
 
-        var modernTextOpacityStart = 6;
-        var modernTextOpacityEnd = 8;
+        var modernTextOpacityStart = 3.5;
+        var modernTextOpacityEnd = 4.5;
         var tt = convertToZeroOne(t, modernTextOpacityStart, modernTextOpacityEnd);
         modernText.style.opacity = tt;
 
-        var modernTextHighlightStart = 7;
-        var modernTextHighlightEnd = 10;
+        var modernTextHighlightStart = 4;
+        var modernTextHighlightEnd = 5;
         var tt = convertToZeroOne(t, modernTextHighlightStart, modernTextHighlightEnd);
         // modernText.style.filter = 'drop-shadow(0px 0px ' + tt * 2 + 'px #982874)';
         modernText.style.filter = 'drop-shadow(0px 0px ' + tt * 2 + 'px #fff)';
