@@ -22750,6 +22750,7 @@ h5 {
 .intro {
     position: relative;
     background-image: url(images/slide_03.jpg);
+    /* background-image: url(images/background.svg); */
     height: 920px;
     background-size: cover;
     padding-top: 1px;
