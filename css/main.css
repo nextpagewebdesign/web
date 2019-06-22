@@ -22754,6 +22754,7 @@ h5 {
     height: 920px;
     background-size: cover;
     padding-top: 1px;
+    background-position: 50% 50%;
     /* display: grid; */
 }
 
@@ -22807,6 +22808,8 @@ h5 {
 		height: 711px; */
         margin-top: -171px;
         height: 673px;
+        background-size: auto;
+        background-position: 50% -120%;
     }
 }
 
