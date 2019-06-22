@@ -12,12 +12,7 @@
 
     var scene = new ScrollMagic.Scene({ duration: 1500 })
         .setPin("#canvas")
-        //.addIndicators({name: "1 (duration: 300)"}) // add indicators (requires plugin)
         .addTo(controller);
-
-    // var scene = new ScrollMagic.Scene({ duration: 1200 })
-    // 	.setPin("#modern-text")
-    // 	.addTo(controller);
 
     var modernText = $('#modern-text')[0];
 
@@ -1371,7 +1366,7 @@
 
             $header.affix({
                 offset: {
-                    top: headerOffset,
+                    top: 1500,
                     bottom: -10
                 }
             });
